@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.UserDe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.HomeBrew", "source\CreativeCoders.MacOS.HomeBrew\CreativeCoders.MacOS.HomeBrew.csproj", "{16476670-C168-4DDD-B6A5-069F402E6960}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.Core", "source\CreativeCoders.MacOS.Core\CreativeCoders.MacOS.Core.csproj", "{6C7AB20D-847C-48A0-92EF-C45C621E11F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,7 @@ Global
 		{16659358-8B04-4FAD-80A0-467982B00A9D} = {3CA6C44F-1F49-4D5D-A26F-92046B51B4F5}
 		{BFADD6C0-DB57-476C-A168-A1AE62DF4668} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
 		{16476670-C168-4DDD-B6A5-069F402E6960} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -63,5 +66,9 @@ Global
 		{16476670-C168-4DDD-B6A5-069F402E6960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16476670-C168-4DDD-B6A5-069F402E6960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16476670-C168-4DDD-B6A5-069F402E6960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
