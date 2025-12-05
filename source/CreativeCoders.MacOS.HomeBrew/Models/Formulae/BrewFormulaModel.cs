@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace CreativeCoders.MacOS.HomeBrew.Models.Formulae;
@@ -68,7 +69,7 @@ public class BrewFormulaModel
     [JsonPropertyName("keg_only")] public bool? KegOnly { get; set; }
 
     /// <summary>Gets or sets the reason for being keg-only, if any.</summary>
-    [JsonPropertyName("keg_only_reason")] public string? KegOnlyReason { get; set; }
+    [JsonPropertyName("keg_only_reason")] public IDictionary<string, string>? KegOnlyReason { get; set; }
 
     /// <summary>Gets or sets compile-time options (rarely used).</summary>
     [JsonPropertyName("options")] public string[]? Options { get; set; }
@@ -89,16 +90,16 @@ public class BrewFormulaModel
     [JsonPropertyName("optional_dependencies")] public string[]? OptionalDependencies { get; set; }
 
     /// <summary>Gets or sets macOS-provided libraries used by this formula.</summary>
-    [JsonPropertyName("uses_from_macos")] public string[]? UsesFromMacos { get; set; }
+    [JsonPropertyName("uses_from_macos")] public object[]? UsesFromMacos { get; set; }
 
     /// <summary>Gets or sets version bounds for macOS uses, if present.</summary>
-    [JsonPropertyName("uses_from_macos_bounds")] public string[]? UsesFromMacosBounds { get; set; }
+    [JsonPropertyName("uses_from_macos_bounds")] public object[]? UsesFromMacosBounds { get; set; }
 
     /// <summary>Gets or sets additional requirements if any. Represented as strings for simplicity.</summary>
-    [JsonPropertyName("requirements")] public string[]? Requirements { get; set; }
+    [JsonPropertyName("requirements")] public IDictionary<string, object?>[]? Requirements { get; set; }
 
     /// <summary>Gets or sets conflicting formulae.</summary>
-    [JsonPropertyName("conflicts_with")] public string[]? ConflictsWith { get; set; }
+    [JsonPropertyName("conflicts_with")] public JsonNode? ConflictsWith { get; set; }
 
     /// <summary>Gets or sets reasons for conflicts if provided.</summary>
     [JsonPropertyName("conflicts_with_reasons")] public string[]? ConflictsWithReasons { get; set; }

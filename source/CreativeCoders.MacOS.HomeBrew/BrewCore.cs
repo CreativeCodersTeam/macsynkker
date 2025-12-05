@@ -2,6 +2,11 @@
 
 public class BrewCore : IBrewCore
 {
+    public BrewCore()
+    {
+
+    }
+
     public bool IsInstalled => false;
 
     public Task InstallHomeBrewAsync()

@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace CreativeCoders.MacOS.HomeBrew.Models;
@@ -74,7 +75,7 @@ public class BrewCaskModel
     [JsonPropertyName("depends_on")] public BrewDependsOnModel? DependsOn { get; set; }
 
     /// <summary>Gets or sets conflicting casks (if any).</summary>
-    [JsonPropertyName("conflicts_with")] public string[]? ConflictsWith { get; set; }
+    [JsonPropertyName("conflicts_with")] public JsonNode? ConflictsWith { get; set; }
 
     /// <summary>Gets or sets the container info, if present (rare).</summary>
     [JsonPropertyName("container")] public object? Container { get; set; }
