@@ -6,7 +6,7 @@ namespace CreativeCoders.MacOS.UserDefaults;
 
 public class DefaultUserDefaults(IProcessExecutorBuilder<string[]> processExecutorBuilder) : IUserDefaults
 {
-    private readonly IProcessExecutor<string[]> _executor = Ensure.NotNull(processExecutorBuilder)
+    private readonly IProcessExecutor<string[]> _getDefaultsDomains = Ensure.NotNull(processExecutorBuilder)
         .SetFileName("defaults")
         .SetArguments(["domains"])
         .SetOutputParser<SplitLinesOutputParser>(x =>
@@ -19,7 +19,7 @@ public class DefaultUserDefaults(IProcessExecutorBuilder<string[]> processExecut
 
     public async Task<IEnumerable<DefaultsDomain>> GetDomainsAsync()
     {
-        var domainNames = await _executor.ExecuteAsync().ConfigureAwait(false);
+        var domainNames = await _getDefaultsDomains.ExecuteAsync().ConfigureAwait(false);
 
         return domainNames?.Select(x => new DefaultsDomain(x)) ?? [];
     }
