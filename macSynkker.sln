@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{2156
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleConsoleApp", "samples\SampleConsoleApp\SampleConsoleApp.csproj", "{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.UserDefaults.Tests", "tests\CreativeCoders.MacOS.UserDefaults.Tests\CreativeCoders.MacOS.UserDefaults.Tests.csproj", "{BF53FB30-8068-426D-BC06-B692E45CE94D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,7 @@ Global
 		{16476670-C168-4DDD-B6A5-069F402E6960} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
 		{6C7AB20D-847C-48A0-92EF-C45C621E11F0} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
 		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D} = {215614E0-F85F-460E-BCAA-13368AE1E3BD}
+		{BF53FB30-8068-426D-BC06-B692E45CE94D} = {D3F213BB-A6EC-4DDA-9C43-59094DF2FD09}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -79,5 +82,9 @@ Global
 		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

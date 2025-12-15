@@ -1,3 +1,4 @@
+using CreativeCoders.DependencyInjection;
 using CreativeCoders.ProcessUtils;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,5 +10,6 @@ public static class UserDefaultsServiceCollectionExtensions
     {
         services.AddProcessUtils();
         services.AddSingleton<IUserDefaults, DefaultUserDefaults>();
+        services.AddObjectFactory();
     }
 }
