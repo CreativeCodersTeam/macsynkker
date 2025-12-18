@@ -9,7 +9,7 @@ namespace CreativeCoders.MacSynkker.Cli;
 
 internal static class Program
 {
-    [SupportedOSPlatform( "macos")]
+    [SupportedOSPlatform("macos")]
     public static async Task<int> Main(string[] args)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -22,7 +22,7 @@ internal static class Program
         var result = await CliHostBuilder.Create()
             .ConfigureServices(x =>
             {
-                x.AddMacOSUserDefaults();
+                x.AddMacOSUserDefaults(true);
                 x.AddHomeBrew();
             })
             .EnableHelp(HelpCommandKind.CommandOrArgument)
