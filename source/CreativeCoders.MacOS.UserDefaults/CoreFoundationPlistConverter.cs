@@ -13,7 +13,7 @@ public class CoreFoundationPlistConverter : IPlistConverter
     private const int BinaryFormat = 200; // kCFPropertyListBinaryFormat_v1_0
 
     [DllImport(CoreFoundation)]
-    private static extern IntPtr CFDataCreate(IntPtr allocator, byte[] bytes, IntPtr length);
+    private static extern IntPtr CFDataCreate(IntPtr allocator, [In] byte[] bytes, IntPtr length);
 
     [DllImport(CoreFoundation)]
     private static extern IntPtr CFDataGetBytePtr(IntPtr data);
@@ -104,4 +104,29 @@ public class CoreFoundationPlistConverter : IPlistConverter
 
         await File.WriteAllBytesAsync(outputFileName, converted).ConfigureAwait(false);
     }
+}
+
+public sealed class CFIntPtr(IntPtr ptr) : IDisposable
+{
+    private const string CoreFoundation = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
+
+    [DllImport(CoreFoundation)]
+    private static extern void CFRelease(IntPtr cf);
+
+    public IntPtr Ptr { get; } = ptr;
+
+    public void Dispose()
+    {
+        if (Ptr != IntPtr.Zero)
+        {
+            CFRelease(Ptr);
+        }
+    }
+
+    public static implicit operator IntPtr(CFIntPtr cfIntPtr) => cfIntPtr.Ptr;
+}
+
+public static class IntPtrExtensions
+{
+    public static CFIntPtr ToCFIntPtr(this IntPtr ptr) => new CFIntPtr(ptr);
 }
