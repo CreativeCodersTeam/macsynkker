@@ -44,26 +44,19 @@ public class CoreFoundationPlistConverter : IPlistConverter
             return Task.FromResult(inputData);
         }
 
-        var inDataRef = IntPtr.Zero;
-        var plistRef = IntPtr.Zero;
-        var outDataRef = IntPtr.Zero;
         var error = IntPtr.Zero;
 
         try
         {
-            inDataRef = CFDataCreate(IntPtr.Zero, inputData, new IntPtr(inputData.Length));
-            if (inDataRef == IntPtr.Zero)
-                throw new InvalidOperationException("Failed to create CFData from input bytes.");
+            using var inDataRef = CFDataCreate(IntPtr.Zero, inputData, new IntPtr(inputData.Length))
+                .ToCFIntPtr(message: "Failed to create CFData from input bytes.");
 
-            int detectedFormat;
-            plistRef = CFPropertyListCreateWithData(IntPtr.Zero, inDataRef, 0, out detectedFormat, out error);
-            if (plistRef == IntPtr.Zero)
-                throw new InvalidOperationException("Failed to parse plist input. The data is not a valid plist.");
+            using var plistRef = CFPropertyListCreateWithData(IntPtr.Zero, inDataRef, 0, out _, out error)
+                .ToCFIntPtr(message: "Failed to parse plist input. The data is not a valid plist.");
 
             var desiredFormat = format == PlistFormat.Binary ? BinaryFormat : XmlFormat;
-            outDataRef = CFPropertyListCreateData(IntPtr.Zero, plistRef, desiredFormat, 0, out error);
-            if (outDataRef == IntPtr.Zero)
-                throw new InvalidOperationException("Failed to serialize plist to desired format.");
+            using var outDataRef = CFPropertyListCreateData(IntPtr.Zero, plistRef, desiredFormat, 0, out error)
+                .ToCFIntPtr(message: "Failed to serialize plist to desired format.");
 
             var ptr = CFDataGetBytePtr(outDataRef);
             var lenPtr = CFDataGetLength(outDataRef);
@@ -75,10 +68,10 @@ public class CoreFoundationPlistConverter : IPlistConverter
         }
         finally
         {
-            if (outDataRef != IntPtr.Zero) CFRelease(outDataRef);
-            if (plistRef != IntPtr.Zero) CFRelease(plistRef);
-            if (inDataRef != IntPtr.Zero) CFRelease(inDataRef);
-            if (error != IntPtr.Zero) CFRelease(error);
+            if (error != IntPtr.Zero)
+            {
+                CFRelease(error);
+            }
         }
     }
 
@@ -123,10 +116,28 @@ public sealed class CFIntPtr(IntPtr ptr) : IDisposable
         }
     }
 
+    public void ThrowIfZero(string message = "CFIntPtr is zero.")
+    {
+        if (Ptr == IntPtr.Zero)
+        {
+            throw new InvalidOperationException(message);
+        }
+    }
+
     public static implicit operator IntPtr(CFIntPtr cfIntPtr) => cfIntPtr.Ptr;
 }
 
 public static class IntPtrExtensions
 {
-    public static CFIntPtr ToCFIntPtr(this IntPtr ptr) => new CFIntPtr(ptr);
+    public static CFIntPtr ToCFIntPtr(this IntPtr ptr, bool throwIfZero = true, string message = "CFIntPtr is zero.")
+    {
+        var cfPtr = new CFIntPtr(ptr);
+
+        if (throwIfZero)
+        {
+            cfPtr.ThrowIfZero(message);
+        }
+
+        return cfPtr;
+    }
 }
