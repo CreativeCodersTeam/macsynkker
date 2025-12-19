@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using CreativeCoders.Core;
 using CreativeCoders.Core.IO;
+using CreativeCoders.MacOS.Core.Foundation;
 
 namespace CreativeCoders.MacOS.UserDefaults;
 
@@ -96,48 +97,5 @@ public class CoreFoundationPlistConverter : IPlistConverter
         var converted = await ConvertBytesAsync(inputBytes, format).ConfigureAwait(false);
 
         await File.WriteAllBytesAsync(outputFileName, converted).ConfigureAwait(false);
-    }
-}
-
-public sealed class CFIntPtr(IntPtr ptr) : IDisposable
-{
-    private const string CoreFoundation = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
-
-    [DllImport(CoreFoundation)]
-    private static extern void CFRelease(IntPtr cf);
-
-    public IntPtr Ptr { get; } = ptr;
-
-    public void Dispose()
-    {
-        if (Ptr != IntPtr.Zero)
-        {
-            CFRelease(Ptr);
-        }
-    }
-
-    public void ThrowIfZero(string message = "CFIntPtr is zero.")
-    {
-        if (Ptr == IntPtr.Zero)
-        {
-            throw new InvalidOperationException(message);
-        }
-    }
-
-    public static implicit operator IntPtr(CFIntPtr cfIntPtr) => cfIntPtr.Ptr;
-}
-
-public static class IntPtrExtensions
-{
-    public static CFIntPtr ToCFIntPtr(this IntPtr ptr, bool throwIfZero = true, string message = "CFIntPtr is zero.")
-    {
-        var cfPtr = new CFIntPtr(ptr);
-
-        if (throwIfZero)
-        {
-            cfPtr.ThrowIfZero(message);
-        }
-
-        return cfPtr;
     }
 }
