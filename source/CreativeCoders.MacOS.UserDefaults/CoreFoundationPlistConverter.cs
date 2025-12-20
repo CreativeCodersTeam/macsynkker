@@ -5,33 +5,13 @@ using CreativeCoders.MacOS.Core.Foundation;
 
 namespace CreativeCoders.MacOS.UserDefaults;
 
-public class CoreFoundationPlistConverter : IPlistConverter
+public class CoreFoundationPlistConverter(ICoreFoundation coreFoundation) : IPlistConverter
 {
-    private const string CoreFoundation = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
+    private readonly ICoreFoundation _coreFoundation = Ensure.NotNull(coreFoundation);
 
     // CFPropertyList format constants
     private const int XmlFormat = 100; // kCFPropertyListXMLFormat_v1_0
     private const int BinaryFormat = 200; // kCFPropertyListBinaryFormat_v1_0
-
-    [DllImport(CoreFoundation)]
-    private static extern IntPtr CFDataCreate(IntPtr allocator, [In] byte[] bytes, IntPtr length);
-
-    [DllImport(CoreFoundation)]
-    private static extern IntPtr CFDataGetBytePtr(IntPtr data);
-
-    [DllImport(CoreFoundation)]
-    private static extern IntPtr CFDataGetLength(IntPtr data);
-
-    [DllImport(CoreFoundation)]
-    private static extern IntPtr CFPropertyListCreateWithData(IntPtr allocator, IntPtr data, uint options,
-        out int format, out IntPtr error);
-
-    [DllImport(CoreFoundation)]
-    private static extern IntPtr CFPropertyListCreateData(IntPtr allocator, IntPtr plist, int format, uint options,
-        out IntPtr error);
-
-    [DllImport(CoreFoundation)]
-    private static extern void CFRelease(IntPtr cf);
 
     public Task<byte[]> ConvertBytesAsync(byte[] inputData, PlistFormat format)
     {
@@ -49,18 +29,20 @@ public class CoreFoundationPlistConverter : IPlistConverter
 
         try
         {
-            using var inDataRef = CFDataCreate(IntPtr.Zero, inputData, new IntPtr(inputData.Length))
+            using var inDataRef = _coreFoundation.CFDataCreate(IntPtr.Zero, inputData, new IntPtr(inputData.Length))
                 .ToCFIntPtr(message: "Failed to create CFData from input bytes.");
 
-            using var plistRef = CFPropertyListCreateWithData(IntPtr.Zero, inDataRef, 0, out _, out error)
+            using var plistRef = _coreFoundation
+                .CFPropertyListCreateWithData(IntPtr.Zero, inDataRef, 0, out _, out error)
                 .ToCFIntPtr(message: "Failed to parse plist input. The data is not a valid plist.");
 
             var desiredFormat = format == PlistFormat.Binary ? BinaryFormat : XmlFormat;
-            using var outDataRef = CFPropertyListCreateData(IntPtr.Zero, plistRef, desiredFormat, 0, out error)
+            using var outDataRef = _coreFoundation
+                .CFPropertyListCreateData(IntPtr.Zero, plistRef, desiredFormat, 0, out error)
                 .ToCFIntPtr(message: "Failed to serialize plist to desired format.");
 
-            var ptr = CFDataGetBytePtr(outDataRef);
-            var lenPtr = CFDataGetLength(outDataRef);
+            var ptr = _coreFoundation.CFDataGetBytePtr(outDataRef);
+            var lenPtr = _coreFoundation.CFDataGetLength(outDataRef);
             var length = lenPtr.ToInt64();
 
             var result = new byte[length];
@@ -71,7 +53,7 @@ public class CoreFoundationPlistConverter : IPlistConverter
         {
             if (error != IntPtr.Zero)
             {
-                CFRelease(error);
+                _coreFoundation.CFRelease(error);
             }
         }
     }

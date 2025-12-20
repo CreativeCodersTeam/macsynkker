@@ -4,18 +4,13 @@ namespace CreativeCoders.MacOS.Core.Foundation;
 
 public sealed class CFIntPtr(IntPtr ptr) : IDisposable
 {
-    private const string CoreFoundation = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
-
-    [DllImport(CoreFoundation)]
-    private static extern void CFRelease(IntPtr cf);
-
     public IntPtr Ptr { get; } = ptr;
 
     public void Dispose()
     {
         if (Ptr != IntPtr.Zero)
         {
-            CFRelease(Ptr);
+            CoreFoundation.CFRelease(Ptr);
         }
     }
 

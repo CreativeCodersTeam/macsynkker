@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using CreativeCoders.MacOS.Core;
 using CreativeCoders.ProcessUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,6 +12,7 @@ public static class UserDefaultsServiceCollectionExtensions
         bool useCoreFoundationPlistConverter = false)
     {
         services.TryAddSingleton<IFileSystem, FileSystem>();
+        services.AddMacOSCore();
         services.AddProcessUtils();
         services.TryAddSingleton<IUserDefaultsEnumerator, UserDefaultsEnumerator>();
         services.TryAddSingleton<IUserDefaultsExporter, UserDefaultsExporter>();
