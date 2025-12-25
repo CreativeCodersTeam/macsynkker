@@ -26,7 +26,6 @@ public class UserDefaultsEnumerator(IProcessExecutorBuilder<string[]> processExe
 
     public async Task<IEnumerable<string>> GetDomainNamesAsync()
     {
-        return (await GetDomainsAsync().ConfigureAwait(false))
-            .Select(x => x.Name);
+        return await _getDefaultsDomains.ExecuteAsync().ConfigureAwait(false) ?? [];
     }
 }

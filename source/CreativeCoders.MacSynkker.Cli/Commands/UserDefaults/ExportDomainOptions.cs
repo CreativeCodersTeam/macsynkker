@@ -14,7 +14,7 @@ public class ExportDomainOptions : IOptionsValidation
 
     [OptionParameter('o', "output",
         HelpText = "The filename or directory to export the user defaults to", IsRequired = true)]
-    public string OutputFileName { get; set; } = string.Empty;
+    public string OutputPath { get; set; } = string.Empty;
 
     [OptionParameter('f', "format", HelpText = "The plist format to export the domain to")]
     public PlistFormat PlistFormat { get; set; } = PlistFormat.Original;
@@ -31,7 +31,7 @@ public class ExportDomainOptions : IOptionsValidation
             case false when string.IsNullOrWhiteSpace(DomainName):
                 messages.Add("Domain name is required when exporting a single domain");
                 break;
-            case true when FileSys.File.Exists(OutputFileName):
+            case true when FileSys.File.Exists(OutputPath):
                 messages.Add("Output must not be a file when exporting all domains");
                 break;
         }

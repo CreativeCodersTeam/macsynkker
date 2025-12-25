@@ -29,10 +29,10 @@ public class ExportDomainCommand(
         }
 
         _ansiConsole.PrintBlock()
-            .WriteLine($"Export domain '{options.DomainName}' to '{options.OutputFileName}'")
+            .WriteLine($"Export domain '{options.DomainName}' to '{options.OutputPath}'")
             .WriteLine();
 
-        await _userDefaultsExporter.ExportDomainAsync(options.DomainName, options.OutputFileName, options.PlistFormat)
+        await _userDefaultsExporter.ExportDomainAsync(options.DomainName, options.OutputPath, options.PlistFormat)
             .ConfigureAwait(false);
 
         return new CommandResult();
@@ -41,13 +41,26 @@ public class ExportDomainCommand(
     private async Task<CommandResult> ExportAllDomainsAsync(ExportDomainOptions options)
     {
         _ansiConsole.PrintBlock()
-            .WriteLine($"Export domain '{options.DomainName}' to '{options.OutputFileName}'")
+            .WriteLine($"Export all domains to '{options.OutputPath}'")
             .WriteLine();
 
-        var domainNames = await _userDefaultsEnumerator.GetDomainNamesAsync().ConfigureAwait(false);
+        var domainNames = (await _userDefaultsEnumerator.GetDomainNamesAsync().ConfigureAwait(false))
+            .ToArray();
 
-        await _userDefaultsExporter.ExportDomainsAsync(domainNames, options.OutputFileName, options.PlistFormat)
-            .ConfigureAwait(false);
+        foreach (var domainName in domainNames)
+        {
+            _ansiConsole.Write($"Exporting domain '{domainName}' ... ");
+
+            var outputFileName = Path.Combine(options.OutputPath, $"{domainName}.plist");
+
+            await _userDefaultsExporter.ExportDomainAsync(domainName, outputFileName, options.PlistFormat)
+                .ConfigureAwait(false);
+
+            _ansiConsole.MarkupLine("[green]Done[/]");
+        }
+
+        _ansiConsole.WriteLine();
+        _ansiConsole.WriteLine($"Exported {domainNames.Length} domains to '{options.OutputPath}'");
 
         return new CommandResult();
     }
