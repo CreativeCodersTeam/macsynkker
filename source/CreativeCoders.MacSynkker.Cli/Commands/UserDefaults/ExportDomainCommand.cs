@@ -1,7 +1,6 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
 using CreativeCoders.MacOS.UserDefaults;
-using CreativeCoders.SysConsole.Cli.Parsing;
 using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
@@ -12,15 +11,23 @@ namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults;
 [CliCommand(["defaults", "domains", "export"])]
 public class ExportDomainCommand(
     IUserDefaultsExporter userDefaultsExporter,
+    IUserDefaultsEnumerator userDefaultsEnumerator,
     IAnsiConsole ansiConsole)
     : ICliCommand<ExportDomainOptions>
 {
+    private readonly IUserDefaultsEnumerator _userDefaultsEnumerator = Ensure.NotNull(userDefaultsEnumerator);
+
     private readonly IUserDefaultsExporter _userDefaultsExporter = Ensure.NotNull(userDefaultsExporter);
 
     private readonly IAnsiConsole _ansiConsole = Ensure.NotNull(ansiConsole);
 
     public async Task<CommandResult> ExecuteAsync(ExportDomainOptions options)
     {
+        if (options.ExportAllDomains)
+        {
+            return await ExportAllDomainsAsync(options).ConfigureAwait(false);
+        }
+
         _ansiConsole.PrintBlock()
             .WriteLine($"Export domain '{options.DomainName}' to '{options.OutputFileName}'")
             .WriteLine();
@@ -30,18 +37,18 @@ public class ExportDomainCommand(
 
         return new CommandResult();
     }
-}
 
-[UsedImplicitly]
-public class ExportDomainOptions
-{
-    [OptionValue(0, HelpText = "The domain name to export", IsRequired = true)]
-    public string DomainName { get; set; } = string.Empty;
+    private async Task<CommandResult> ExportAllDomainsAsync(ExportDomainOptions options)
+    {
+        _ansiConsole.PrintBlock()
+            .WriteLine($"Export domain '{options.DomainName}' to '{options.OutputFileName}'")
+            .WriteLine();
 
-    [OptionParameter('o', "output",
-        HelpText = "The filename to export the domain to", IsRequired = true)]
-    public string OutputFileName { get; set; } = string.Empty;
+        var domainNames = await _userDefaultsEnumerator.GetDomainNamesAsync().ConfigureAwait(false);
 
-    [OptionParameter('f', "format", HelpText = "The plist format to export the domain to")]
-    public PlistFormat PlistFormat { get; set; } = PlistFormat.Original;
+        await _userDefaultsExporter.ExportDomainsAsync(domainNames, options.OutputFileName, options.PlistFormat)
+            .ConfigureAwait(false);
+
+        return new CommandResult();
+    }
 }

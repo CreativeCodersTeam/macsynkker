@@ -9,17 +9,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Commands\HomeBrew\" />
-      <Folder Include="Commands\Mac\" />
+        <Folder Include="Commands\HomeBrew\"/>
+        <Folder Include="Commands\Mac\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="CreativeCoders.Cli.Hosting" Version="5.4.0" />
+        <PackageReference Include="CreativeCoders.Cli.Hosting" Version="5.5.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CreativeCoders.MacOS.HomeBrew\CreativeCoders.MacOS.HomeBrew.csproj" />
-      <ProjectReference Include="..\CreativeCoders.MacOS.UserDefaults\CreativeCoders.MacOS.UserDefaults.csproj" />
+        <ProjectReference Include="..\CreativeCoders.MacOS.HomeBrew\CreativeCoders.MacOS.HomeBrew.csproj"/>
+        <ProjectReference Include="..\CreativeCoders.MacOS.UserDefaults\CreativeCoders.MacOS.UserDefaults.csproj"/>
     </ItemGroup>
 
 </Project>

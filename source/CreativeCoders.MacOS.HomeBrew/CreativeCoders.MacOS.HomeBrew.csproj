@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Rest\" />
+        <Folder Include="Rest\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="CreativeCoders.DependencyInjection" Version="5.4.0" />
-      <PackageReference Include="CreativeCoders.ProcessUtils" Version="5.4.0" />
+        <PackageReference Include="CreativeCoders.DependencyInjection" Version="5.5.0"/>
+        <PackageReference Include="CreativeCoders.ProcessUtils" Version="5.5.0"/>
     </ItemGroup>
 
 </Project>
