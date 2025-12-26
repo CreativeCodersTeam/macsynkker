@@ -22,6 +22,10 @@ public class ExportDomainOptions : IOptionsValidation
     [OptionParameter('a', "all", HelpText = "Export all domains to the specified output directory")]
     public bool ExportAllDomains { get; set; }
 
+    [OptionParameter('s', "filter",
+        HelpText = "Filter domains by name pattern. Only takes effect when exporting all domains (Option -a -all)")]
+    public string Filter { get; set; } = string.Empty;
+
     public Task<OptionsValidationResult> ValidateAsync()
     {
         var messages = new List<string>();

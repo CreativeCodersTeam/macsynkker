@@ -1,5 +1,6 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
+using CreativeCoders.Core.Text;
 using CreativeCoders.MacOS.UserDefaults;
 using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
@@ -35,7 +36,7 @@ public class ExportDomainCommand(
         await _userDefaultsExporter.ExportDomainAsync(options.DomainName, options.OutputPath, options.PlistFormat)
             .ConfigureAwait(false);
 
-        return new CommandResult();
+        return CommandResult.Success;
     }
 
     private async Task<CommandResult> ExportAllDomainsAsync(ExportDomainOptions options)
@@ -46,6 +47,13 @@ public class ExportDomainCommand(
 
         var domainNames = (await _userDefaultsEnumerator.GetDomainNamesAsync().ConfigureAwait(false))
             .ToArray();
+
+        if (!string.IsNullOrWhiteSpace(options.Filter))
+        {
+            domainNames = domainNames
+                .Where(x => PatternMatcher.MatchesPattern(x, options.Filter))
+                .ToArray();
+        }
 
         foreach (var domainName in domainNames)
         {
