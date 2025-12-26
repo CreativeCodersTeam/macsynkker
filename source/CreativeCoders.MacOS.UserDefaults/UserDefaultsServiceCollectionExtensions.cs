@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using CreativeCoders.Core.IO;
 using CreativeCoders.MacOS.Core;
 using CreativeCoders.ProcessUtils;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,7 @@ public static class UserDefaultsServiceCollectionExtensions
     public static void AddMacOSUserDefaults(this IServiceCollection services,
         bool useCoreFoundationPlistConverter = false)
     {
-        services.TryAddSingleton<IFileSystem, FileSystem>();
+        services.AddFileSystem();
         services.AddMacOSCore();
         services.AddProcessUtils();
         services.TryAddSingleton<IUserDefaultsEnumerator, UserDefaultsEnumerator>();
