@@ -1,5 +1,7 @@
+using System.IO.Abstractions;
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
+using CreativeCoders.Core.IO;
 using CreativeCoders.Core.Text;
 using CreativeCoders.MacOS.UserDefaults;
 using CreativeCoders.SysConsole.Core;
@@ -13,9 +15,12 @@ namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults;
 public class ExportDomainCommand(
     IUserDefaultsExporter userDefaultsExporter,
     IUserDefaultsEnumerator userDefaultsEnumerator,
-    IAnsiConsole ansiConsole)
+    IAnsiConsole ansiConsole,
+    IFileSystem fileSystem)
     : ICliCommand<ExportDomainOptions>
 {
+    private readonly IFileSystem _fileSystem = Ensure.NotNull(fileSystem);
+
     private readonly IUserDefaultsEnumerator _userDefaultsEnumerator = Ensure.NotNull(userDefaultsEnumerator);
 
     private readonly IUserDefaultsExporter _userDefaultsExporter = Ensure.NotNull(userDefaultsExporter);
@@ -29,12 +34,15 @@ public class ExportDomainCommand(
             return await ExportAllDomainsAsync(options).ConfigureAwait(false);
         }
 
-        _ansiConsole.PrintBlock()
-            .WriteLine($"Export domain '{options.DomainName}' to '{options.OutputPath}'")
-            .WriteLine();
+        _ansiConsole.Write($"Exporting domain '{options.DomainName}' to '{options.OutputPath}' ... ");
+
+        _fileSystem.Directory.EnsureDirectoryForFileNameExists(options.OutputPath);
 
         await _userDefaultsExporter.ExportDomainAsync(options.DomainName, options.OutputPath, options.PlistFormat)
             .ConfigureAwait(false);
+
+        _ansiConsole.MarkupLine("[green]Done[/]");
+        _ansiConsole.WriteLine();
 
         return CommandResult.Success;
     }
@@ -44,6 +52,8 @@ public class ExportDomainCommand(
         _ansiConsole.PrintBlock()
             .WriteLine($"Export all domains to '{options.OutputPath}'")
             .WriteLine();
+
+        _fileSystem.Directory.EnsureDirectoryExists(options.OutputPath);
 
         var domainNames = (await _userDefaultsEnumerator.GetDomainNamesAsync().ConfigureAwait(false))
             .ToArray();
