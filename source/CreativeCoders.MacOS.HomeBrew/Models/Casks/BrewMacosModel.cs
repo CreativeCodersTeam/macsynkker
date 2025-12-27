@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CreativeCoders.MacOS.HomeBrew.Models;
+namespace CreativeCoders.MacOS.HomeBrew.Models.Casks;
 
 /// <summary>
 /// Represents macOS constraints for the cask.
@@ -8,5 +8,6 @@ namespace CreativeCoders.MacOS.HomeBrew.Models;
 public class BrewMacosModel
 {
     /// <summary>Gets or sets versions that are greater or equal to the listed ones.</summary>
-    [JsonPropertyName(">=")] public string[]? GreaterOrEqual { get; set; }
+    [JsonPropertyName(">=")]
+    public string[]? GreaterOrEqual { get; set; }
 }

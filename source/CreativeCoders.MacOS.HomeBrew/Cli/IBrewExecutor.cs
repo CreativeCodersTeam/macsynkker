@@ -1,5 +1,6 @@
 using CreativeCoders.DependencyInjection;
 using CreativeCoders.MacOS.HomeBrew.Models;
+using CreativeCoders.MacOS.HomeBrew.Models.Casks;
 using CreativeCoders.MacOS.HomeBrew.Models.Formulae;
 using CreativeCoders.ProcessUtils.Execution;
 using CreativeCoders.ProcessUtils.Execution.Parsers;

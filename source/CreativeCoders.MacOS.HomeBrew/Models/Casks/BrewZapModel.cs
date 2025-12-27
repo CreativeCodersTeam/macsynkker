@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CreativeCoders.MacOS.HomeBrew.Models;
+namespace CreativeCoders.MacOS.HomeBrew.Models.Casks;
 
 /// <summary>
 /// Represents zap cleanup instructions.
@@ -8,5 +8,6 @@ namespace CreativeCoders.MacOS.HomeBrew.Models;
 public class BrewZapModel
 {
     /// <summary>Gets or sets items that should be moved to trash when zapping.</summary>
-    [JsonPropertyName("trash")] public string[]? Trash { get; set; }
+    [JsonPropertyName("trash")]
+    public string[]? Trash { get; set; }
 }

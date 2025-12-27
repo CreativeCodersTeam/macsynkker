@@ -23,7 +23,7 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         foreach (var installedSoftwareCask in installedSoftware.Casks)
         {
             _ansiConsole.WriteLine(
-                $"- {installedSoftwareCask.Name?.FirstOrDefault() ?? "unkown"} ({installedSoftwareCask.Version})");
+                $"- {installedSoftwareCask.Name?.FirstOrDefault() ?? "unkown"} ({ExtractCaskVersion(installedSoftwareCask.Version)}) [{installedSoftwareCask.Version}]");
         }
 
         _ansiConsole.WriteLine();
@@ -36,9 +36,34 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
 
         return CommandResult.Success;
     }
+
+    private static string ExtractCaskVersion(string? versionString)
+    {
+        if (string.IsNullOrWhiteSpace(versionString))
+        {
+            return string.Empty;
+        }
+
+        var versionSplitterIndex = versionString.IndexOf(',');
+
+        if (versionSplitterIndex == -1)
+        {
+            return versionString;
+        }
+
+        var firstVersion = versionString[..versionSplitterIndex];
+
+        var secondVersion = versionString[(versionSplitterIndex + 1)..];
+
+        return secondVersion.StartsWith(firstVersion, StringComparison.InvariantCultureIgnoreCase)
+            ? secondVersion
+            : firstVersion;
+    }
 }
 
 public class BrewListInstalledSoftwareOptions
 {
-    [OptionParameter('c', "casks")] public bool? Casks { get; set; }
+    [OptionParameter('c', "casks")] public bool Casks { get; set; }
+
+    [OptionParameter('f', "formulae")] public bool Formulae { get; set; }
 }

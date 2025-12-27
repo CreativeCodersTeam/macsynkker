@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CreativeCoders.MacOS.HomeBrew.Models;
+namespace CreativeCoders.MacOS.HomeBrew.Models.Casks;
 
 /// <summary>
 /// Represents the checksum of the Ruby source file defining the cask.
@@ -8,5 +8,6 @@ namespace CreativeCoders.MacOS.HomeBrew.Models;
 public class BrewRubySourceChecksumModel
 {
     /// <summary>Gets or sets the SHA-256 checksum.</summary>
-    [JsonPropertyName("sha256")] public string? Sha256 { get; set; }
+    [JsonPropertyName("sha256")]
+    public string? Sha256 { get; set; }
 }

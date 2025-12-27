@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CreativeCoders.MacOS.HomeBrew.Models;
+namespace CreativeCoders.MacOS.HomeBrew.Models.Casks;
 
 /// <summary>
 /// Represents uninstall instructions for a cask.
@@ -8,5 +8,6 @@ namespace CreativeCoders.MacOS.HomeBrew.Models;
 public class BrewUninstallModel
 {
     /// <summary>Gets or sets the bundle identifier(s) to quit before uninstall.</summary>
-    [JsonPropertyName("quit")] public string? Quit { get; set; }
+    [JsonPropertyName("quit")]
+    public string? Quit { get; set; }
 }

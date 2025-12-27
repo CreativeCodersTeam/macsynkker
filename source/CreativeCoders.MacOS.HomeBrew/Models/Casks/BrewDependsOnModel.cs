@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CreativeCoders.MacOS.HomeBrew.Models;
+namespace CreativeCoders.MacOS.HomeBrew.Models.Casks;
 
 /// <summary>
 /// Represents dependency constraints of a cask.
@@ -8,5 +8,6 @@ namespace CreativeCoders.MacOS.HomeBrew.Models;
 public class BrewDependsOnModel
 {
     /// <summary>Gets or sets macOS version constraints.</summary>
-    [JsonPropertyName("macos")] public BrewMacosModel? Macos { get; set; }
+    [JsonPropertyName("macos")]
+    public BrewMacosModel? Macos { get; set; }
 }
