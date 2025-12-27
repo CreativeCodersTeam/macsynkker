@@ -1,7 +1,8 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
 using CreativeCoders.MacOS.HomeBrew;
-using CreativeCoders.SysConsole.Cli.Parsing;
+using CreativeCoders.MacOS.HomeBrew.Models.Casks;
+using CreativeCoders.MacOS.HomeBrew.Models.Formulae;
 using Spectre.Console;
 
 namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew;
@@ -18,23 +19,69 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
     {
         var installedSoftware = await _brewInstalledSoftware.GetInstalledSoftwareAsync().ConfigureAwait(false);
 
-        _ansiConsole.WriteLine("Installed HomeBrew casks:");
-
-        foreach (var installedSoftwareCask in installedSoftware.Casks)
+        if ((!options.Casks.HasValue && !options.Formulae.HasValue) || options.Casks == true)
         {
-            _ansiConsole.WriteLine(
-                $"- {installedSoftwareCask.Name?.FirstOrDefault() ?? "unknown"} ({ExtractCaskVersion(installedSoftwareCask.Version)}) [{installedSoftwareCask.Version}]");
+            PrintCasks(installedSoftware.Casks, options.ShowAsListView);
         }
 
-        _ansiConsole.WriteLine();
-        _ansiConsole.WriteLine("Installed HomeBrew formulae:");
-
-        foreach (var installedSoftwareFormula in installedSoftware.Formulae)
+        if ((!options.Casks.HasValue && !options.Formulae.HasValue) || options.Formulae == true)
         {
-            _ansiConsole.WriteLine($"- {installedSoftwareFormula.Name} ({installedSoftwareFormula.Versions?.Stable})");
+            PrintFormulae(installedSoftware.Formulae, options.ShowAsListView);
         }
 
         return CommandResult.Success;
+    }
+
+    private void PrintFormulae(BrewFormulaModel[] installedSoftwareFormulae, bool optionsShowAsListView)
+    {
+        _ansiConsole.WriteLine("Installed HomeBrew formulae:");
+        _ansiConsole.WriteLine();
+
+        if (optionsShowAsListView)
+        {
+            _ansiConsole.PrintTable(installedSoftwareFormulae, [
+                new TableColumnDef<BrewFormulaModel>(x => x.Name, "Name"),
+                new TableColumnDef<BrewFormulaModel>(x =>
+                    string.Join(",", x.Installed?.Select(y => y.Version) ?? []), "Installed"),
+                new TableColumnDef<BrewFormulaModel>(x => x.Versions?.Stable, "Available")
+            ]);
+        }
+        else
+        {
+            foreach (var installedSoftwareFormula in installedSoftwareFormulae)
+            {
+                _ansiConsole.WriteLine(
+                    $"- {installedSoftwareFormula.Name} ({installedSoftwareFormula.Versions?.Stable})");
+            }
+        }
+
+        _ansiConsole.WriteLine();
+    }
+
+    private void PrintCasks(BrewCaskModel[] installedSoftwareCasks, bool optionsShowAsListView)
+    {
+        _ansiConsole.WriteLine("Installed HomeBrew casks:");
+        _ansiConsole.WriteLine();
+
+        if (optionsShowAsListView)
+        {
+            _ansiConsole.PrintTable(installedSoftwareCasks, [
+                new TableColumnDef<BrewCaskModel>(x => string.Join(string.Empty, x.Name ?? []), "Name"),
+                new TableColumnDef<BrewCaskModel>(x => x.Installed, "Installed"),
+                new TableColumnDef<BrewCaskModel>(x => x.Version, "Available"),
+                new TableColumnDef<BrewCaskModel>(x => x.Tap, "Tap")
+            ]);
+        }
+        else
+        {
+            foreach (var installedSoftwareCask in installedSoftwareCasks)
+            {
+                _ansiConsole.WriteLine(
+                    $"- {installedSoftwareCask.Name?.FirstOrDefault() ?? "unknown"} ({ExtractCaskVersion(installedSoftwareCask.Installed)}) [{installedSoftwareCask.Installed}]");
+            }
+        }
+
+        _ansiConsole.WriteLine();
     }
 
     private static string ExtractCaskVersion(string? versionString)
@@ -59,11 +106,4 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
             ? secondVersion
             : firstVersion;
     }
-}
-
-public class BrewListInstalledSoftwareOptions
-{
-    [OptionParameter('c', "casks")] public bool? Casks { get; set; }
-
-    [OptionParameter('f', "formulae")] public bool? Formulae { get; set; }
 }
