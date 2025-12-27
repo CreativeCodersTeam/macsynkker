@@ -63,7 +63,7 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
 
 public class BrewListInstalledSoftwareOptions
 {
-    [OptionParameter('c', "casks")] public bool Casks { get; set; }
+    [OptionParameter('c', "casks")] public bool? Casks { get; set; }
 
-    [OptionParameter('f', "formulae")] public bool Formulae { get; set; }
+    [OptionParameter('f', "formulae")] public bool? Formulae { get; set; }
 }
