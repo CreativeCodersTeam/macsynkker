@@ -23,7 +23,7 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         foreach (var installedSoftwareCask in installedSoftware.Casks)
         {
             _ansiConsole.WriteLine(
-                $"- {installedSoftwareCask.Name?.FirstOrDefault() ?? "unkown"} ({ExtractCaskVersion(installedSoftwareCask.Version)}) [{installedSoftwareCask.Version}]");
+                $"- {installedSoftwareCask.Name?.FirstOrDefault() ?? "unknown"} ({ExtractCaskVersion(installedSoftwareCask.Version)}) [{installedSoftwareCask.Version}]");
         }
 
         _ansiConsole.WriteLine();
