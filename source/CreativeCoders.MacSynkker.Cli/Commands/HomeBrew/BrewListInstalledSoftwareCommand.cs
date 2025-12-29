@@ -3,6 +3,7 @@ using CreativeCoders.Core;
 using CreativeCoders.MacOS.HomeBrew;
 using CreativeCoders.MacOS.HomeBrew.Models.Casks;
 using CreativeCoders.MacOS.HomeBrew.Models.Formulae;
+using CreativeCoders.SysConsole.Core;
 using Spectre.Console;
 
 namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew;
@@ -17,6 +18,8 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
 
     public async Task<CommandResult> ExecuteAsync(BrewListInstalledSoftwareOptions options)
     {
+        _ansiConsole.WriteLine("List installed HomeBrew software");
+
         var installedSoftware = await _brewInstalledSoftware.GetInstalledSoftwareAsync().ConfigureAwait(false);
 
         if ((!options.Casks.HasValue && !options.Formulae.HasValue) || options.Casks == true)
@@ -40,7 +43,7 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         if (optionsShowAsListView)
         {
             _ansiConsole.PrintTable(installedSoftwareFormulae, [
-                new TableColumnDef<BrewFormulaModel>(x => x.Name, "Name"),
+                new TableColumnDef<BrewFormulaModel>(x => x.Name, "Name", color: Color.Blue),
                 new TableColumnDef<BrewFormulaModel>(x =>
                     string.Join(",", x.Installed?.Select(y => y.Version) ?? []), "Installed"),
                 new TableColumnDef<BrewFormulaModel>(x => x.Versions?.Stable, "Available")
@@ -66,7 +69,8 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         if (optionsShowAsListView)
         {
             _ansiConsole.PrintTable(installedSoftwareCasks, [
-                new TableColumnDef<BrewCaskModel>(x => string.Join(string.Empty, x.Name ?? []), "Name"),
+                new TableColumnDef<BrewCaskModel>(x => string.Join(string.Empty, x.Name ?? []), "Name",
+                    color: Color.Blue),
                 new TableColumnDef<BrewCaskModel>(x => x.Installed, "Installed"),
                 new TableColumnDef<BrewCaskModel>(x => x.Version, "Available"),
                 new TableColumnDef<BrewCaskModel>(x => x.Tap, "Tap")
