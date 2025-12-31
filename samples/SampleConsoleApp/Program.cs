@@ -2,7 +2,6 @@
 using CreativeCoders.DependencyInjection;
 using CreativeCoders.MacOS.Core;
 using CreativeCoders.MacOS.HomeBrew;
-using CreativeCoders.MacOS.HomeBrew.Cli;
 using CreativeCoders.ProcessUtils;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,7 +26,7 @@ static class Program
         Console.Write("brew path:");
         Console.WriteLine(brewPath);
 
-        var brew = sp.GetRequiredService<IBrewExecutor>();
+        var brew = sp.GetRequiredService<IBrewInstalledSoftware>();
 
         var installedSoftware = await brew.GetInstalledSoftwareAsync().ConfigureAwait(false);
 
@@ -38,6 +37,7 @@ static class Program
         Console.WriteLine();
         Console.WriteLine("Installed casks:");
 
-        installedSoftware.Casks.ForEach(x => Console.WriteLine($"- {x.Name?.FirstOrDefault("NAME_NOT_FOUND")}: {x.Version}"));
+        installedSoftware.Casks.ForEach(x =>
+            Console.WriteLine($"- {x.Name?.FirstOrDefault("NAME_NOT_FOUND")}: {x.Version}"));
     }
 }
