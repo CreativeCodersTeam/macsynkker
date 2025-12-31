@@ -12,4 +12,7 @@ public class BrewListInstalledSoftwareOptions
 
     [OptionParameter('l', "listview", HelpText = "Show as table list view")]
     public bool ShowAsListView { get; set; }
+
+    [OptionParameter('o', "outdated", HelpText = "Show only outdated software")]
+    public bool ShowOnlyOutdated { get; set; }
 }

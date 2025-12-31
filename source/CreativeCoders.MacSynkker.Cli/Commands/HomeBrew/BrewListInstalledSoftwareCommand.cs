@@ -4,10 +4,12 @@ using CreativeCoders.MacOS.HomeBrew;
 using CreativeCoders.MacOS.HomeBrew.Models.Casks;
 using CreativeCoders.MacOS.HomeBrew.Models.Formulae;
 using CreativeCoders.SysConsole.Core;
+using JetBrains.Annotations;
 using Spectre.Console;
 
 namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew;
 
+[UsedImplicitly]
 [CliCommand(["brew", "list"])]
 public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewInstalledSoftware brewInstalledSoftware)
     : ICliCommand<BrewListInstalledSoftwareOptions>
@@ -20,16 +22,21 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
     {
         _ansiConsole.WriteLine("List installed HomeBrew software");
 
+        if (options.ShowOnlyOutdated)
+        {
+            _ansiConsole.WriteLine("Only outdated software will be shown");
+        }
+
         var installedSoftware = await _brewInstalledSoftware.GetInstalledSoftwareAsync().ConfigureAwait(false);
 
         if ((!options.Casks.HasValue && !options.Formulae.HasValue) || options.Casks == true)
         {
-            PrintCasks(installedSoftware.Casks, options.ShowAsListView);
+            PrintCasks(installedSoftware.GetCasks(options.ShowOnlyOutdated), options.ShowAsListView);
         }
 
         if ((!options.Casks.HasValue && !options.Formulae.HasValue) || options.Formulae == true)
         {
-            PrintFormulae(installedSoftware.Formulae, options.ShowAsListView);
+            PrintFormulae(installedSoftware.GetFormulae(options.ShowOnlyOutdated), options.ShowAsListView);
         }
 
         return CommandResult.Success;
