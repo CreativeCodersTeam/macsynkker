@@ -1,4 +1,3 @@
-using System.IO.Abstractions;
 using CreativeCoders.Core.IO;
 using CreativeCoders.MacOS.Core;
 using CreativeCoders.ProcessUtils;

@@ -1,7 +1,6 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
 using CreativeCoders.MacOS.HomeBrew;
-using CreativeCoders.SysConsole.Cli.Parsing;
 using JetBrains.Annotations;
 using Spectre.Console;
 

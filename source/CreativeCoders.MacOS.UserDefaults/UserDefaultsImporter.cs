@@ -1,7 +1,6 @@
 using System.IO.Abstractions;
 using CreativeCoders.Core;
 using CreativeCoders.Core.Collections;
-using CreativeCoders.Core.IO;
 using CreativeCoders.ProcessUtils.Execution;
 
 namespace CreativeCoders.MacOS.UserDefaults;

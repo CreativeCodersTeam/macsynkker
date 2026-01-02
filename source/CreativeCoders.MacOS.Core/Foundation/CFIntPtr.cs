@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace CreativeCoders.MacOS.Core.Foundation;
 
 public sealed class CFIntPtr(IntPtr ptr) : IDisposable
