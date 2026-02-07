@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Rest\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CreativeCoders.DependencyInjection" Version="5.9.0"/>
+        <PackageReference Include="CreativeCoders.ProcessUtils" Version="5.9.0"/>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,90 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D3F213BB-A6EC-4DDA-9C43-59094DF2FD09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{A9CE4FEF-F010-408C-9B5E-F00DC960A792}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__ai", "__ai", "{3CA6C44F-1F49-4D5D-A26F-92046B51B4F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__global", "__global", "{BF2B8E40-4D03-41A1-8ABD-7AD1A33D5B53}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{C033DF64-285B-4C44-AFFC-400878C92C73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cli", "cli", "{1C050676-278A-4DD4-8396-A27BA85A89E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacSynkker.Cli", "source\CreativeCoders.MacSynkker.Cli\CreativeCoders.MacSynkker.Cli.csproj", "{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "copilot", "copilot", "{083C21F2-8C37-4E30-9CA8-82AAD4F77DD9}"
+	ProjectSection(SolutionItems) = preProject
+		.github\csharp.instructions.md = .github\csharp.instructions.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "junie", "junie", "{16659358-8B04-4FAD-80A0-467982B00A9D}"
+	ProjectSection(SolutionItems) = preProject
+		.junie\guidelines.md = .junie\guidelines.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.UserDefaults", "source\CreativeCoders.MacOS.UserDefaults\CreativeCoders.MacOS.UserDefaults.csproj", "{BFADD6C0-DB57-476C-A168-A1AE62DF4668}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.HomeBrew", "source\CreativeCoders.MacOS.HomeBrew\CreativeCoders.MacOS.HomeBrew.csproj", "{16476670-C168-4DDD-B6A5-069F402E6960}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.Core", "source\CreativeCoders.MacOS.Core\CreativeCoders.MacOS.Core.csproj", "{6C7AB20D-847C-48A0-92EF-C45C621E11F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{215614E0-F85F-460E-BCAA-13368AE1E3BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleConsoleApp", "samples\SampleConsoleApp\SampleConsoleApp.csproj", "{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.MacOS.UserDefaults.Tests", "tests\CreativeCoders.MacOS.UserDefaults.Tests\CreativeCoders.MacOS.UserDefaults.Tests.csproj", "{BF53FB30-8068-426D-BC06-B692E45CE94D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C033DF64-285B-4C44-AFFC-400878C92C73} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
+		{1C050676-278A-4DD4-8396-A27BA85A89E6} = {C033DF64-285B-4C44-AFFC-400878C92C73}
+		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8} = {1C050676-278A-4DD4-8396-A27BA85A89E6}
+		{083C21F2-8C37-4E30-9CA8-82AAD4F77DD9} = {3CA6C44F-1F49-4D5D-A26F-92046B51B4F5}
+		{16659358-8B04-4FAD-80A0-467982B00A9D} = {3CA6C44F-1F49-4D5D-A26F-92046B51B4F5}
+		{BFADD6C0-DB57-476C-A168-A1AE62DF4668} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
+		{16476670-C168-4DDD-B6A5-069F402E6960} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0} = {A9CE4FEF-F010-408C-9B5E-F00DC960A792}
+		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D} = {215614E0-F85F-460E-BCAA-13368AE1E3BD}
+		{BF53FB30-8068-426D-BC06-B692E45CE94D} = {D3F213BB-A6EC-4DDA-9C43-59094DF2FD09}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFADD6C0-DB57-476C-A168-A1AE62DF4668}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFADD6C0-DB57-476C-A168-A1AE62DF4668}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFADD6C0-DB57-476C-A168-A1AE62DF4668}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFADD6C0-DB57-476C-A168-A1AE62DF4668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16476670-C168-4DDD-B6A5-069F402E6960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16476670-C168-4DDD-B6A5-069F402E6960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16476670-C168-4DDD-B6A5-069F402E6960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16476670-C168-4DDD-B6A5-069F402E6960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C7AB20D-847C-48A0-92EF-C45C621E11F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75784FD0-11AA-4DB2-95AE-92DA3C3B793D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF53FB30-8068-426D-BC06-B692E45CE94D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
