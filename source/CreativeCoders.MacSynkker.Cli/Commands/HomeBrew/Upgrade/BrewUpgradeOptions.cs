@@ -1,10 +1,11 @@
+using CreativeCoders.Cli.Core;
 using CreativeCoders.SysConsole.Cli.Parsing;
 using JetBrains.Annotations;
 
 namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.Upgrade;
 
 [UsedImplicitly]
-public class BrewUpgradeOptions
+public class BrewUpgradeOptions : IOptionsValidation
 {
     [OptionValue(0)] public string AppName { get; set; } = string.Empty;
 
@@ -16,4 +17,9 @@ public class BrewUpgradeOptions
 
     [OptionParameter('h', "haltonerror", HelpText = "Halt on error upgrading an app")]
     public bool HaltOnError { get; set; }
+
+    public Task<OptionsValidationResult> ValidateAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -8,7 +8,8 @@ using Spectre.Console;
 namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ImportDomain;
 
 [UsedImplicitly]
-[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "import"])]
+[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "import"],
+    Description = "Imports a MacOS user defaults domain from a plist file")]
 public class ImportDomainCommand(
     IFileSystem fileSystem,
     IAnsiConsole ansiConsole,

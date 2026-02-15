@@ -11,7 +11,8 @@ using Spectre.Console;
 namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ExportDomain;
 
 [UsedImplicitly]
-[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "export"])]
+[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "export"],
+    Description = "Exports a MacOS user defaults domain to a plist file")]
 public class ExportDomainCommand(
     IUserDefaultsExporter userDefaultsExporter,
     IUserDefaultsEnumerator userDefaultsEnumerator,

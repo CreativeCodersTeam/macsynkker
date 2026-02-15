@@ -7,7 +7,7 @@ using Spectre.Console;
 namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.Upgrade;
 
 [UsedImplicitly]
-[CliCommand([HomebrewCommandGroup.Name, "upgrade"])]
+[CliCommand([HomebrewCommandGroup.Name, "upgrade"], Description = "Upgrade Homebrew installed software")]
 public class BrewUpgradeCommand(
     IBrewUpgrader brewUpgrader,
     IBrewInstalledSoftware brewInstalledSoftware,
