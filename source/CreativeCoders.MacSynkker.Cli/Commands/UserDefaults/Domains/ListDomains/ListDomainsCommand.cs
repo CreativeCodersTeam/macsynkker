@@ -6,10 +6,11 @@ using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.ListDomains;
+namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ListDomains;
 
 [UsedImplicitly]
-[CliCommand([UserDefaultsCommandGroup.Name, "domains", "list"], Description = "Lists all domains for user defaults")]
+[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "list"],
+    Description = "Lists all domains for user defaults")]
 public class ListDomainsCommand(IAnsiConsole ansiConsole, IUserDefaultsEnumerator userDefaultsEnumerator) : ICliCommand
 {
     private readonly IUserDefaultsEnumerator _userDefaultsEnumerator = Ensure.NotNull(userDefaultsEnumerator);

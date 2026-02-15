@@ -8,10 +8,10 @@ using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.ExportDomain;
+namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ExportDomain;
 
 [UsedImplicitly]
-[CliCommand([UserDefaultsCommandGroup.Name, "domains", "export"])]
+[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "export"])]
 public class ExportDomainCommand(
     IUserDefaultsExporter userDefaultsExporter,
     IUserDefaultsEnumerator userDefaultsEnumerator,

@@ -2,11 +2,13 @@ using System.IO.Abstractions;
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
 using CreativeCoders.MacOS.UserDefaults;
+using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.ImportDomain;
+namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ImportDomain;
 
-[CliCommand([UserDefaultsCommandGroup.Name, "domains", "import"])]
+[UsedImplicitly]
+[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "import"])]
 public class ImportDomainCommand(
     IFileSystem fileSystem,
     IAnsiConsole ansiConsole,

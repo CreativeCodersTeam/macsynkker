@@ -6,6 +6,7 @@ using Spectre.Console;
 
 namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.Info;
 
+[UsedImplicitly]
 [CliCommand([HomebrewCommandGroup.Name, "info"])]
 public class BrewInfoCommand(IAnsiConsole ansiConsole, IBrewInfo brewInfo) : ICliCommand<InfoOptions>
 {
