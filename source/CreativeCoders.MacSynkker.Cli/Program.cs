@@ -25,7 +25,9 @@ internal static class Program
                 x.AddMacOSUserDefaults(true);
                 x.AddHomeBrew();
             })
-            .EnableHelp(HelpCommandKind.CommandOrArgument)
+            .UseValidation()
+            .PrintFooterText([""])
+            .EnableHelp(HelpCommandKind.CommandOrArgument, HelpCommandKind.EmptyArgs)
             .Build()
             .RunAsync(args).ConfigureAwait(false);
 

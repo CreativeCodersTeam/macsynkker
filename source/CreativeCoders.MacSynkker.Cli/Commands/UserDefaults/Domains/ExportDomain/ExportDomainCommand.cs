@@ -8,10 +8,11 @@ using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults;
+namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ExportDomain;
 
 [UsedImplicitly]
-[CliCommand(["defaults", "domains", "export"])]
+[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "export"],
+    Description = "Exports a MacOS user defaults domain to a plist file")]
 public class ExportDomainCommand(
     IUserDefaultsExporter userDefaultsExporter,
     IUserDefaultsEnumerator userDefaultsEnumerator,
@@ -41,17 +42,14 @@ public class ExportDomainCommand(
         await _userDefaultsExporter.ExportDomainAsync(options.DomainName, options.OutputPath, options.PlistFormat)
             .ConfigureAwait(false);
 
-        _ansiConsole.MarkupLine("[green]Done[/]");
-        _ansiConsole.WriteLine();
+        _ansiConsole.MarkupLines("[green]Done[/]", string.Empty);
 
         return CommandResult.Success;
     }
 
     private async Task<CommandResult> ExportAllDomainsAsync(ExportDomainOptions options)
     {
-        _ansiConsole.PrintBlock()
-            .WriteLine($"Export all domains to '{options.OutputPath}'")
-            .WriteLine();
+        _ansiConsole.WriteLines($"Export all domains to '{options.OutputPath}'", string.Empty);
 
         _fileSystem.Directory.EnsureDirectoryExists(options.OutputPath);
 
@@ -77,8 +75,7 @@ public class ExportDomainCommand(
             _ansiConsole.MarkupLine("[green]Done[/]");
         }
 
-        _ansiConsole.WriteLine();
-        _ansiConsole.WriteLine($"Exported {domainNames.Length} domains to '{options.OutputPath}'");
+        _ansiConsole.WriteLines(string.Empty, $"Exported {domainNames.Length} domains to '{options.OutputPath}'");
 
         return new CommandResult();
     }
