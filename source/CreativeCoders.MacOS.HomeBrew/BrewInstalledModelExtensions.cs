@@ -39,7 +39,7 @@ public static class BrewInstalledModelExtensions
             return installedVersion == availableVersion;
         }
 
-        return installedVersion == availableVersion || installedVersion?.StartsWith($"{availableVersion}_") == true;
+        return installedVersion == availableVersion || installedVersion.StartsWith($"{availableVersion}_");
     }
 
     public static BrewFormulaModel[] GetFormulae(this BrewInstalledModel installedModel, bool onlyOutdated)
