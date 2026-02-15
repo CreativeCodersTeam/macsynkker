@@ -1,6 +1,7 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
 using CreativeCoders.MacOS.HomeBrew;
+using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
 
@@ -26,7 +27,7 @@ public class BrewUpgradeCommand(
 
         if (!string.IsNullOrWhiteSpace(options.AppName))
         {
-            await _brewUpgrader.UpgradeSoftwareAsync(options.AppName).ConfigureAwait(false);
+            await UpgradeSoftwareCoreAsync(options.AppName).ConfigureAwait(false);
         }
         else if (options.UpgradeOutdated)
         {
@@ -34,6 +35,20 @@ public class BrewUpgradeCommand(
         }
 
         return CommandResult.Success;
+    }
+
+    private Task UpgradeSoftwareCoreAsync(string appName)
+    {
+        if (!appName.StartsWith("dotnet-", StringComparison.OrdinalIgnoreCase))
+        {
+            return _brewUpgrader.UpgradeSoftwareAsync(appName);
+        }
+
+        _ansiConsole.MarkupLine(
+            "Skipping upgrade of a dotnet part cause its possible, that its needed by this app"
+                .ToWarningMarkup());
+
+        return Task.CompletedTask;
     }
 
     private async Task UpgradeAllOutdatedAsync(BrewUpgradeOptions options)
@@ -77,7 +92,7 @@ public class BrewUpgradeCommand(
 
         try
         {
-            await _brewUpgrader.UpgradeSoftwareAsync(appName).ConfigureAwait(false);
+            await UpgradeSoftwareCoreAsync(appName).ConfigureAwait(false);
 
             _ansiConsole.MarkupLine("[green]Done[/]");
 
