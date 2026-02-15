@@ -69,7 +69,7 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
 
     private void PrintCasks(BrewCaskModel[] installedSoftwareCasks, bool optionsShowAsListView)
     {
-        _ansiConsole.WriteLine("Installed HomeBrew casks:", string.Empty);
+        _ansiConsole.WriteLines("Installed HomeBrew casks:", string.Empty);
 
         if (optionsShowAsListView)
         {
