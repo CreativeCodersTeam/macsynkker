@@ -32,6 +32,8 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         if ((!options.Casks.HasValue && !options.Formulae.HasValue) || options.Casks == true)
         {
             PrintCasks(installedSoftware.GetCasks(options.ShowOnlyOutdated), options.ShowAsListView);
+
+            _ansiConsole.WriteLine();
         }
 
         if ((!options.Casks.HasValue && !options.Formulae.HasValue) || options.Formulae == true)
@@ -44,8 +46,7 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
 
     private void PrintFormulae(BrewFormulaModel[] installedSoftwareFormulae, bool optionsShowAsListView)
     {
-        _ansiConsole.WriteLine("Installed HomeBrew formulae:");
-        _ansiConsole.WriteLine();
+        _ansiConsole.WriteLines("Installed HomeBrew formulae:", string.Empty);
 
         if (optionsShowAsListView)
         {
@@ -64,14 +65,11 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
                     $"- {installedSoftwareFormula.Name} ({installedSoftwareFormula.Versions?.Stable})");
             }
         }
-
-        _ansiConsole.WriteLine();
     }
 
     private void PrintCasks(BrewCaskModel[] installedSoftwareCasks, bool optionsShowAsListView)
     {
-        _ansiConsole.WriteLine("Installed HomeBrew casks:");
-        _ansiConsole.WriteLine();
+        _ansiConsole.WriteLine("Installed HomeBrew casks:", string.Empty);
 
         if (optionsShowAsListView)
         {
@@ -92,8 +90,6 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
                     $"- {installedSoftwareCask.Name?.FirstOrDefault() ?? "unknown"} ({ExtractCaskVersion(installedSoftwareCask.Installed)}) [{installedSoftwareCask.Installed}]");
             }
         }
-
-        _ansiConsole.WriteLine();
     }
 
     private static string ExtractCaskVersion(string? versionString)

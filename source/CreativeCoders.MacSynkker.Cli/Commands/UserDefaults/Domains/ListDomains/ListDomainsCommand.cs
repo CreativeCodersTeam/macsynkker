@@ -1,6 +1,6 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
-using CreativeCoders.Core.Collections;
+using CreativeCoders.Core.Text;
 using CreativeCoders.MacOS.UserDefaults;
 using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
@@ -11,22 +11,25 @@ namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ListDomain
 [UsedImplicitly]
 [CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "list"],
     Description = "Lists all domains for user defaults")]
-public class ListDomainsCommand(IAnsiConsole ansiConsole, IUserDefaultsEnumerator userDefaultsEnumerator) : ICliCommand
+public class ListDomainsCommand(IAnsiConsole ansiConsole, IUserDefaultsEnumerator userDefaultsEnumerator)
+    : ICliCommand<ListDomainsOptions>
 {
     private readonly IUserDefaultsEnumerator _userDefaultsEnumerator = Ensure.NotNull(userDefaultsEnumerator);
 
     private readonly IAnsiConsole _ansiConsole = Ensure.NotNull(ansiConsole);
 
-    public async Task<CommandResult> ExecuteAsync()
+    public async Task<CommandResult> ExecuteAsync(ListDomainsOptions options)
     {
-        _ansiConsole.PrintBlock()
-            .WriteLine("Show all user defaults domains")
-            .WriteLine();
+        _ansiConsole.WriteLines("Show all user defaults domains", string.Empty);
 
         var domains = await _userDefaultsEnumerator.GetDomainNamesAsync().ConfigureAwait(false);
 
-        domains.OrderBy(x => x).ForEach(x =>
-            _ansiConsole.WriteLine(x));
+        if (!string.IsNullOrWhiteSpace(options.FilterPattern))
+        {
+            domains = domains.Where(x => PatternMatcher.MatchesPattern(x, options.FilterPattern)).ToArray();
+        }
+
+        _ansiConsole.WriteLines(domains.OrderBy(x => x).Select(x => $"- {x}").ToArray());
 
         return new CommandResult();
     }
