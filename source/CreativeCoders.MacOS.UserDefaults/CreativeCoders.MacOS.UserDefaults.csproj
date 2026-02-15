@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CreativeCoders.DependencyInjection" Version="5.9.0"/>
-        <PackageReference Include="CreativeCoders.ProcessUtils" Version="5.9.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1"/>
+        <PackageReference Include="CreativeCoders.DependencyInjection" Version="6.6.0"/>
+        <PackageReference Include="CreativeCoders.ProcessUtils" Version="6.6.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3"/>
     </ItemGroup>
 
     <ItemGroup>

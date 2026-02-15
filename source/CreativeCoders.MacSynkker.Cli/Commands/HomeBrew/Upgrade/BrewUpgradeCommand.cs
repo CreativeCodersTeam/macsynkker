@@ -4,10 +4,10 @@ using CreativeCoders.MacOS.HomeBrew;
 using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew;
+namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.Upgrade;
 
 [UsedImplicitly]
-[CliCommand(["brew", "upgrade"])]
+[CliCommand([HomebrewCommandGroup.Name, "upgrade"])]
 public class BrewUpgradeCommand(
     IBrewUpgrader brewUpgrader,
     IBrewInstalledSoftware brewInstalledSoftware,

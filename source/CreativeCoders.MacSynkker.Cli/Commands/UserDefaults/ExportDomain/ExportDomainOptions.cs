@@ -4,7 +4,7 @@ using CreativeCoders.MacOS.UserDefaults;
 using CreativeCoders.SysConsole.Cli.Parsing;
 using JetBrains.Annotations;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults;
+namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.ExportDomain;
 
 [UsedImplicitly]
 public class ExportDomainOptions : IOptionsValidation

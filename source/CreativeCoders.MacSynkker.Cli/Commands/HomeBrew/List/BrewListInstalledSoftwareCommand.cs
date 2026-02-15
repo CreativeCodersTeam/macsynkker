@@ -7,10 +7,10 @@ using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew;
+namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.List;
 
 [UsedImplicitly]
-[CliCommand(["brew", "list"])]
+[CliCommand([HomebrewCommandGroup.Name, "list"])]
 public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewInstalledSoftware brewInstalledSoftware)
     : ICliCommand<BrewListInstalledSoftwareOptions>
 {

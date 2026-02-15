@@ -4,9 +4,9 @@ using CreativeCoders.MacOS.HomeBrew;
 using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew;
+namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.Info;
 
-[CliCommand(["brew", "info"])]
+[CliCommand([HomebrewCommandGroup.Name, "info"])]
 public class BrewInfoCommand(IAnsiConsole ansiConsole, IBrewInfo brewInfo) : ICliCommand<InfoOptions>
 {
     private readonly IBrewInfo _brewInfo = Ensure.NotNull(brewInfo);

@@ -1,7 +1,7 @@
 using CreativeCoders.SysConsole.Cli.Parsing;
 using JetBrains.Annotations;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew;
+namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.List;
 
 [UsedImplicitly]
 public class BrewListInstalledSoftwareOptions

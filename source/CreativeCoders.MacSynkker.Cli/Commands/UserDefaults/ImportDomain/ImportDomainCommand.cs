@@ -4,9 +4,9 @@ using CreativeCoders.Core;
 using CreativeCoders.MacOS.UserDefaults;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults;
+namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.ImportDomain;
 
-[CliCommand(["defaults", "domains", "import"])]
+[CliCommand([UserDefaultsCommandGroup.Name, "domains", "import"])]
 public class ImportDomainCommand(
     IFileSystem fileSystem,
     IAnsiConsole ansiConsole,
