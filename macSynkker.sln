@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__global", "__global", "{BF
 		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
+		GitVersion.yml = GitVersion.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{C033DF64-285B-4C44-AFFC-400878C92C73}"
@@ -61,6 +62,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "instructions", "instruction
 		.github\instructions\csharp.instructions.md = .github\instructions\csharp.instructions.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1A70000D-DAC9-4D34-9306-7914CC837B05}"
+	ProjectSection(SolutionItems) = preProject
+		build.sh = build.sh
+		build.ps1 = build.ps1
+		build.cmd = build.cmd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +88,7 @@ Global
 		{5D00B0B9-E9B4-423C-AFCF-0F7CB21B2A78} = {9A2D709F-395D-4373-9B73-FDAE4E606B64}
 		{076341D1-E2B7-47A8-AB79-78BFD7DBA646} = {BF2B8E40-4D03-41A1-8ABD-7AD1A33D5B53}
 		{3CAC9757-F7D3-4A37-9820-B8755EF7FF3F} = {083C21F2-8C37-4E30-9CA8-82AAD4F77DD9}
+		{1A70000D-DAC9-4D34-9306-7914CC837B05} = {BF2B8E40-4D03-41A1-8ABD-7AD1A33D5B53}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4B29C32B-9BAF-471E-B83A-D7F5735F27B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

@@ -30,8 +30,7 @@ public class BuildContext(ICakeContext context)
         : "https://nuget.pkg.github.com/CreativeCodersTeam/index.json";
 
     public bool SkipPush => this.BuildSystem().IsPullRequest ||
-                            this.BuildSystem().IsLocalBuild ||
-                            this.GitHubActions().Environment.Runner.OS != "Linux";
+                            this.BuildSystem().IsLocalBuild;
 
     public DirectoryPath PublishOutputDir => ArtifactsDir.Combine("published");
 
@@ -45,37 +44,10 @@ public class BuildContext(ICakeContext context)
             RootDir
                 .Combine(CliPath)
                 .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli")),
-        new PublishingItem(
-            RootDir
-                .Combine(CliPath)
-                .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli-win64"))
-        {
-            Runtime = "win-x64",
-            SelfContained = true
-        },
-        new PublishingItem(
-            RootDir
-                .Combine(CliPath)
-                .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli-win64-no-selfcontained"))
-        {
-            Runtime = "win-x64",
-            SelfContained = false
-        },
-        new PublishingItem(
-            RootDir
-                .Combine(CliPath)
-                .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli-win-arm64"))
-        {
-            Runtime = "win-arm64",
-            SelfContained = true
-        }
+            PublishOutputDir.Combine("cli"))
     ];
 
-    private const string DistPackageName = "GitTool.Cli";
+    private const string DistPackageName = "MacSynkker.Cli";
 
     public IEnumerable<DistPackage> DistPackages =>
     [
@@ -86,16 +58,12 @@ public class BuildContext(ICakeContext context)
 
     public string ReleaseVersion => $"v{Version.FullSemVer}";
 
-    public string ReleaseBody => "GitTools Release";
+    public string ReleaseBody => "MacSynkker Release";
 
     public bool IsPreRelease => !string.IsNullOrWhiteSpace(Version.PreReleaseTag);
 
-    private DirectoryPath SetupOutputDir => ArtifactsDir.Combine("setups");
-
     public IEnumerable<GitHubReleaseAsset> ReleaseAssets =>
     [
-        new GitHubReleaseFileAsset(
-            FileSys.Directory.EnumerateFiles(SetupOutputDir.FullPath, "*.exe").First(), null),
         new GitHubReleaseFileAsset(
             GetRequiredSettings<ICreateDistPackagesTaskSettings>().DistOutputPath
                 .CombineWithFilePath(DistPackageName + ".tar.gz").FullPath, null)
