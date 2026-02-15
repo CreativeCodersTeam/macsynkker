@@ -34,6 +34,11 @@ public static class BrewInstalledModelExtensions
 
     private static bool FormulaeVersionsAreEqual(string? installedVersion, string? availableVersion)
     {
+        if (installedVersion == null || availableVersion == null)
+        {
+            return installedVersion == availableVersion;
+        }
+
         return installedVersion == availableVersion || installedVersion?.StartsWith($"{availableVersion}_") == true;
     }
 
