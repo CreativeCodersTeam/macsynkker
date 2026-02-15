@@ -23,8 +23,23 @@ public static class BrewInstalledModelExtensions
     public static BrewFormulaModel[] GetOutdatedFormulae(this BrewInstalledModel installedModel)
     {
         return installedModel.Formulae
-            .Where(x => x.Installed?.Any(y => y.Version != x.Versions?.Stable) == true)
+            .Where(IsFormulaOutdated)
             .ToArray();
+    }
+
+    private static bool IsFormulaOutdated(BrewFormulaModel formula)
+    {
+        return formula.Installed?.Any(y => !FormulaeVersionsAreEqual(y.Version, formula.Versions?.Stable)) == true;
+    }
+
+    private static bool FormulaeVersionsAreEqual(string? installedVersion, string? availableVersion)
+    {
+        if (installedVersion == null || availableVersion == null)
+        {
+            return installedVersion == availableVersion;
+        }
+
+        return installedVersion == availableVersion || installedVersion.StartsWith($"{availableVersion}_");
     }
 
     public static BrewFormulaModel[] GetFormulae(this BrewInstalledModel installedModel, bool onlyOutdated)

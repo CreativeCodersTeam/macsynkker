@@ -1,0 +1,35 @@
+name: main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  macos-latest:
+    name: macos-latest
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: 'Cache: ~/.nuget/packages'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nuget/packages
+          key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
+      - name: 'Build with target: NuGetPush, Publish, CreateDistPackages, CreateGitHubRelease'
+        env:
+          NUGET_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./build.cmd -t nugetpush -t publish -t createdistpackages -t creategithubrelease
+      - name: 'Publish: coverage_report'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: .tests/coverage-report
+      - name: 'Publish: cli dist package'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacSynkker.Cli
+          path: .artifacts/dist/MacSynkker.Cli.tar.gz

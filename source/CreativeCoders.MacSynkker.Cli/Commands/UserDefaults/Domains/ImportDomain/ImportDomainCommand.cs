@@ -2,11 +2,14 @@ using System.IO.Abstractions;
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
 using CreativeCoders.MacOS.UserDefaults;
+using JetBrains.Annotations;
 using Spectre.Console;
 
-namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults;
+namespace CreativeCoders.MacSynkker.Cli.Commands.UserDefaults.Domains.ImportDomain;
 
-[CliCommand(["defaults", "domains", "import"])]
+[UsedImplicitly]
+[CliCommand([UserDefaultsCommandGroup.Name, UserDefaultsDomainsCommandGroup.Name, "import"],
+    Description = "Imports a MacOS user defaults domain from a plist file")]
 public class ImportDomainCommand(
     IFileSystem fileSystem,
     IAnsiConsole ansiConsole,
