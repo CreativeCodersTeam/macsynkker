@@ -25,27 +25,56 @@ public class BrewImportCommand(IAnsiConsole ansiConsole, IBrewImporter brewImpor
             return MacSynkkerCliExitCodes.FileNotFound;
         }
 
-        _ansiConsole.Write($"Importing Homebrew software from '{options.InputPath}' ... ");
+        _ansiConsole.MarkupLine($"Importing Homebrew software from '{options.InputPath}'");
+        _ansiConsole.WriteLine();
+
+        var progress = new Progress<BrewImportProgress>(OnProgress);
 
         try
         {
-            await _brewImporter.ImportFromFileAsync(options.InputPath).ConfigureAwait(false);
+            await _brewImporter.ImportFromFileAsync(options.InputPath, progress).ConfigureAwait(false);
 
-            _ansiConsole.MarkupLine("[green]Done[/]");
+            _ansiConsole.WriteLine();
+            _ansiConsole.MarkupLine("[green]Import completed successfully[/]");
         }
         catch (BrewImportFailedException e)
         {
-            _ansiConsole.MarkupLine("[yellow]Completed with errors[/]");
             _ansiConsole.WriteLine();
-
-            foreach (var failure in e.Failures)
-            {
-                _ansiConsole.MarkupLine(
-                    $"[red]Failed to install {failure.Kind.ToString().ToLowerInvariant()}: {failure.Target}[/]");
-                _ansiConsole.WriteLine(failure.ErrorOutput);
-            }
+            _ansiConsole.MarkupLine($"[yellow]Import completed with {e.Failures.Count} error(s)[/]");
         }
 
         return CommandResult.Success;
     }
+
+    private void OnProgress(BrewImportProgress p)
+    {
+        switch (p.State)
+        {
+            case BrewImportStepState.Starting:
+                _ansiConsole.Write($"{GetStepLabel(p.Step)} '{p.Target}' ... ");
+                break;
+
+            case BrewImportStepState.Succeeded:
+                _ansiConsole.MarkupLine("[green]Done[/]");
+                break;
+
+            case BrewImportStepState.Failed:
+                _ansiConsole.MarkupLine("[red]Failed[/]");
+
+                if (p.Error is not null)
+                {
+                    _ansiConsole.WriteLine(p.Error.ErrorOutput);
+                }
+
+                break;
+        }
+    }
+
+    private static string GetStepLabel(BrewImportStep step) => step switch
+    {
+        BrewImportStep.Tap => "Tapping",
+        BrewImportStep.InstallFormula => "Installing formula",
+        BrewImportStep.InstallCask => "Installing cask",
+        _ => "Processing"
+    };
 }

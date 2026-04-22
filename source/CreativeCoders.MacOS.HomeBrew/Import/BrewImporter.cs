@@ -28,17 +28,16 @@ public class BrewImporter : IBrewImporter
         return model ?? new BrewExportModel();
     }
 
-    public async Task ImportAsync(BrewExportModel exportModel)
+    public async Task ImportAsync(BrewExportModel exportModel, IProgress<BrewImportProgress>? progress = null)
     {
         Ensure.NotNull(exportModel);
 
         var failures = new List<BrewInstallFailedException>();
 
-        // Add all non-default taps once before installing so that formulae / casks from custom
-        // taps can be resolved by `brew install`.
         foreach (var tap in CollectDistinctTaps(exportModel))
         {
-            await TryRunAsync(() => _installer.TapAsync(tap), failures).ConfigureAwait(false);
+            await TryRunAsync(BrewImportStep.Tap, tap, () => _installer.TapAsync(tap), failures, progress)
+                .ConfigureAwait(false);
         }
 
         foreach (var formula in exportModel.Formulae)
@@ -48,7 +47,8 @@ public class BrewImporter : IBrewImporter
                 continue;
             }
 
-            await TryRunAsync(() => _installer.InstallFormulaAsync(formula.Name), failures).ConfigureAwait(false);
+            await TryRunAsync(BrewImportStep.InstallFormula, formula.Name,
+                () => _installer.InstallFormulaAsync(formula.Name), failures, progress).ConfigureAwait(false);
         }
 
         foreach (var cask in exportModel.Casks)
@@ -58,7 +58,8 @@ public class BrewImporter : IBrewImporter
                 continue;
             }
 
-            await TryRunAsync(() => _installer.InstallCaskAsync(cask.Token), failures).ConfigureAwait(false);
+            await TryRunAsync(BrewImportStep.InstallCask, cask.Token,
+                () => _installer.InstallCaskAsync(cask.Token), failures, progress).ConfigureAwait(false);
         }
 
         if (failures.Count > 0)
@@ -67,11 +68,11 @@ public class BrewImporter : IBrewImporter
         }
     }
 
-    public async Task ImportFromFileAsync(string filePath)
+    public async Task ImportFromFileAsync(string filePath, IProgress<BrewImportProgress>? progress = null)
     {
         var exportModel = await ReadFileAsync(filePath).ConfigureAwait(false);
 
-        await ImportAsync(exportModel).ConfigureAwait(false);
+        await ImportAsync(exportModel, progress).ConfigureAwait(false);
     }
 
     private static IEnumerable<string> CollectDistinctTaps(BrewExportModel exportModel)
@@ -97,15 +98,35 @@ public class BrewImporter : IBrewImporter
         return taps;
     }
 
-    private static async Task TryRunAsync(Func<Task> action, List<BrewInstallFailedException> failures)
+    private static async Task TryRunAsync(
+        BrewImportStep step,
+        string target,
+        Func<Task> action,
+        List<BrewInstallFailedException> failures,
+        IProgress<BrewImportProgress>? progress)
     {
+        progress?.Report(new BrewImportProgress
+        {
+            Step = step, State = BrewImportStepState.Starting, Target = target
+        });
+
         try
         {
             await action().ConfigureAwait(false);
+
+            progress?.Report(new BrewImportProgress
+            {
+                Step = step, State = BrewImportStepState.Succeeded, Target = target
+            });
         }
         catch (BrewInstallFailedException e)
         {
             failures.Add(e);
+
+            progress?.Report(new BrewImportProgress
+            {
+                Step = step, State = BrewImportStepState.Failed, Target = target, Error = e
+            });
         }
     }
 }
