@@ -7,7 +7,7 @@ applyTo: '**/*.cs'
 
 ## C# Instructions
 
-- Always use the latest version C#, currently C# 14 features.
+- Always use the latest stable C# version available in the project's target framework.
 - Write clear and concise comments for each function.
 
 ## General Instructions
@@ -16,13 +16,30 @@ applyTo: '**/*.cs'
 - Write code with good maintainability practices, including comments on why certain design decisions were made.
 - Handle edge cases and write clear exception handling.
 - For libraries or external dependencies, mention their usage and purpose in comments.
-- Used language for comments, documentation and code should always be English.
+- Use `Ensure.NotNull(...)` from `CreativeCoders.Core` for null guards
+- Use `Ensure.IsNotNullOrEmpty(...)` from `CreativeCoders.Core` for string guards for arguments that must not be empty
+- Use `Ensure.IsNotNullOrWhitespace(...)` from `CreativeCoders.Core` for string guards for arguments that must not be empty or whitespace
+- Guard arguments for public methods in libraries with `Ensure.NotNull(...)` for all required parameters:
+```csharp
+public void DoSomething(string input, string fileName)
+{
+    Ensure.NotNull(input);
+    Ensure.NotNullOrWhitespace(fileName);
+    // method implementation
+}
+```
+- Guard constructor-injected dependencies with `Ensure.NotNull(...)` for all required parameters:
+```csharp
+_service = Ensure.NotNull(service);
+```
 
 ## Naming Conventions
 
-- Follow PascalCase for component names, method names, and public members.
-- Use camelCase for private fields and local variables.
+- Follow PascalCase for component names, method names and public members.
+- Use camelCase for local variables.
+- Use _camelCase for private fields.
 - Prefix interface names with "I" (e.g., IUserService).
+- Use naming conventions from surrounding code if different from Naming conventions above.
 
 ## Formatting
 
@@ -33,8 +50,8 @@ applyTo: '**/*.cs'
 - Ensure that the final return statement of a method is on its own line.
 - Use pattern matching and switch expressions wherever possible.
 - Use `nameof` instead of string literals when referring to member names.
-- Ensure that XML doc comments are created for any public APIs. When applicable, include `<example>` and `<code>`
-  documentation in the comments.
+- Use the `csharp-docs` skill to ensure XML documentation follows best practices.
+- Use `[UsedImplicitly]` from JetBrains.Annotations when types are only used via DI or reflection
 
 ## Project Setup and Structure
 
@@ -42,13 +59,26 @@ applyTo: '**/*.cs'
 - Explain the purpose of each generated file and folder to build understanding of the project structure.
 - Demonstrate how to organize code using feature folders or domain-driven design principles.
 - Show proper separation of concerns with models, services, and data access layers.
-- Explain the Program.cs and configuration system in ASP.NET Core 10 including environment-specific settings.
+- Explain the Program.cs and configuration system in ASP.NET Core including environment-specific settings.
+
+## Modern C# Features
+
+- Prefer **switch expressions** over switch statements
+- Use **pattern matching** wherever possible
+- Use **primary constructors** when no constructor body is needed
+- Use private fields with guards instead of using primary constructor parameters directly, unless the parameter is assigned to a property.
+
+## Async/Await
+
+- In **library code** always use `.ConfigureAwait(false)`
+- In **tests** do not use `.ConfigureAwait(false)` (disabled via tests/.editorconfig)
 
 ## Nullable Reference Types
 
 - Declare variables non-nullable, and check for `null` at entry points.
 - Always use `is null` or `is not null` instead of `== null` or `!= null`.
 - Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
+- Do not add redundant null checks when the type system already guarantees non-null
 
 ## Data Access Patterns
 
@@ -88,21 +118,12 @@ applyTo: '**/*.cs'
 - Explain the logging levels and when to use each.
 - Demonstrate integration with Application Insights for telemetry collection.
 - Show how to implement custom telemetry and correlation IDs for request tracking.
-- Explain how to monitor API performance, errors, and usage patterns.
+- Explain how to monitor API performance, errors and usage patterns.
 
 ## Testing
 
 - Always include test cases for critical paths of the application.
-- Guide users through creating unit tests.
-- Copy existing style in nearby files for test method names and capitalization.
-- Explain integration testing approaches for API endpoints.
-- Demonstrate how to mock dependencies for effective testing.
-- Show how to test authentication and authorization logic.
-- Explain test-driven development principles as applied to API development.
-- Use awesomeassertions for asserting expected results.
-- Use xUnit for unit testing.
-- Use FakeItEasy for mocking dependencies.
-- Always separate a test method into the blocks Arrange, Act, and Assert. Mark this blocks with comments.
+- Always use the `dotnet-tester` skill for detailed testing conventions and workflows when writing tests.
 
 ## Performance Optimization
 
@@ -121,3 +142,8 @@ applyTo: '**/*.cs'
 - Demonstrate deployment to Azure App Service, Azure Container Apps, or other hosting options.
 - Show how to implement health checks and readiness probes.
 - Explain environment-specific configurations for different deployment stages.
+
+## Console
+- Use AnsiConsole for console input and output. Always use IAnsiConsole via dependency injection.
+- Use colored output where it makes sense. For example, use green for success messages, red for errors and yellow for warnings.
+- Use tables for structured output when displaying lists of data or multiple pieces of related information.
