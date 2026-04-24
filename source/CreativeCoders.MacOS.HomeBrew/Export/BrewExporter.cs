@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CreativeCoders.Core;
-using CreativeCoders.MacOS.HomeBrew.Models;
 using CreativeCoders.MacOS.HomeBrew.Models.Casks;
 using CreativeCoders.MacOS.HomeBrew.Models.Export;
 using CreativeCoders.MacOS.HomeBrew.Models.Formulae;
@@ -13,32 +12,29 @@ namespace CreativeCoders.MacOS.HomeBrew.Export;
 /// <see cref="IBrewInstalledSoftware"/> and projects it onto the slim
 /// <see cref="BrewExportModel"/> used for the JSON export.
 /// </summary>
-public class BrewExporter : IBrewExporter
+public class BrewExporter(IBrewInstalledSoftware installedSoftware) : IBrewExporter
 {
     private const string DefaultFormulaTap = "homebrew/core";
 
     private const string DefaultCaskTap = "homebrew/cask";
 
-    private static readonly JsonSerializerOptions s_jsonOptions = new()
+    private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
     {
         WriteIndented = true,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    private readonly IBrewInstalledSoftware _installedSoftware;
+    private readonly IBrewInstalledSoftware _installedSoftware = Ensure.NotNull(installedSoftware);
 
-    public BrewExporter(IBrewInstalledSoftware installedSoftware)
-    {
-        _installedSoftware = Ensure.NotNull(installedSoftware);
-    }
-
-    public async Task<BrewExportModel> CreateExportModelAsync()
+    /// <inheritdoc />
+    public async Task<BrewExportModel> CreateExportModelAsync(bool includeDependencies)
     {
         var installed = await _installedSoftware.GetInstalledSoftwareAsync().ConfigureAwait(false);
 
         return new BrewExportModel
         {
             Formulae = installed.Formulae
+                .Where(x => !x.IsInstalledAsDependency() || includeDependencies)
                 .Select(MapFormula)
                 .Where(x => !string.IsNullOrWhiteSpace(x.Name))
                 .ToArray(),
@@ -49,11 +45,12 @@ public class BrewExporter : IBrewExporter
         };
     }
 
-    public async Task ExportToFileAsync(string filePath)
+    /// <inheritdoc />
+    public async Task ExportToFileAsync(string filePath, bool includeDependencies)
     {
         Ensure.IsNotNullOrWhitespace(filePath);
 
-        var exportModel = await CreateExportModelAsync().ConfigureAwait(false);
+        var exportModel = await CreateExportModelAsync(includeDependencies).ConfigureAwait(false);
 
         var directory = Path.GetDirectoryName(filePath);
 
@@ -64,7 +61,7 @@ public class BrewExporter : IBrewExporter
 
         await using var stream = File.Create(filePath);
 
-        await JsonSerializer.SerializeAsync(stream, exportModel, s_jsonOptions).ConfigureAwait(false);
+        await JsonSerializer.SerializeAsync(stream, exportModel, JsonOptions).ConfigureAwait(false);
     }
 
     private static BrewExportFormulaModel MapFormula(BrewFormulaModel formula)

@@ -1,6 +1,7 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
 using CreativeCoders.MacOS.HomeBrew.Import;
+using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
 
@@ -40,7 +41,7 @@ public class BrewImportCommand(IAnsiConsole ansiConsole, IBrewImporter brewImpor
         catch (BrewImportFailedException e)
         {
             _ansiConsole.WriteLine();
-            _ansiConsole.MarkupLine($"[yellow]Import completed with {e.Failures.Count} error(s)[/]");
+            _ansiConsole.MarkupLine($"[red]Import completed with {e.Failures.Count} error(s)[/]");
         }
 
         return CommandResult.Success;

@@ -27,7 +27,7 @@ public class BrewExporterTests
         var sut = new BrewExporter(software);
 
         // Act
-        var model = await sut.CreateExportModelAsync();
+        var model = await sut.CreateExportModelAsync(false);
 
         // Assert
         model.Formulae.Should().ContainSingle();
@@ -49,7 +49,7 @@ public class BrewExporterTests
         var sut = new BrewExporter(software);
 
         // Act
-        var model = await sut.CreateExportModelAsync();
+        var model = await sut.CreateExportModelAsync(false);
 
         // Assert
         model.Formulae[0].Name.Should().Be("wget");
@@ -74,7 +74,7 @@ public class BrewExporterTests
         var sut = new BrewExporter(software);
 
         // Act
-        var model = await sut.CreateExportModelAsync();
+        var model = await sut.CreateExportModelAsync(false);
 
         // Assert
         model.Formulae.Should().ContainSingle().Which.Name.Should().Be("wget");
@@ -96,7 +96,7 @@ public class BrewExporterTests
         var sut = new BrewExporter(software);
 
         // Act
-        var model = await sut.CreateExportModelAsync();
+        var model = await sut.CreateExportModelAsync(false);
 
         // Assert
         model.Casks.Should().ContainSingle();
@@ -122,7 +122,7 @@ public class BrewExporterTests
         var sut = new BrewExporter(software);
 
         // Act
-        var model = await sut.CreateExportModelAsync();
+        var model = await sut.CreateExportModelAsync(false);
 
         // Assert
         model.Casks.Should().ContainSingle().Which.Token.Should().Be("firefox");
@@ -141,10 +141,230 @@ public class BrewExporterTests
         var sut = new BrewExporter(software);
 
         // Act
-        var model = await sut.CreateExportModelAsync();
+        var model = await sut.CreateExportModelAsync(false);
 
         // Assert
         model.Casks[0].Tap.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CreateExportModelAsync_WhenIncludeDependenciesFalse_ExcludesDependencyFormulae()
+    {
+        // Arrange
+        var installed = new BrewInstalledModel
+        {
+            Formulae =
+            [
+                new BrewFormulaModel
+                {
+                    Name = "wget",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = false }]
+                },
+                new BrewFormulaModel
+                {
+                    Name = "openssl",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = true }]
+                }
+            ]
+        };
+        var software = A.Fake<IBrewInstalledSoftware>();
+        A.CallTo(() => software.GetInstalledSoftwareAsync()).Returns(installed);
+        var sut = new BrewExporter(software);
+
+        // Act
+        var model = await sut.CreateExportModelAsync(false);
+
+        // Assert
+        model.Formulae.Should().ContainSingle().Which.Name.Should().Be("wget");
+    }
+
+    [Fact]
+    public async Task CreateExportModelAsync_WhenIncludeDependenciesTrue_IncludesDependencyFormulae()
+    {
+        // Arrange
+        var installed = new BrewInstalledModel
+        {
+            Formulae =
+            [
+                new BrewFormulaModel
+                {
+                    Name = "wget",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = false }]
+                },
+                new BrewFormulaModel
+                {
+                    Name = "openssl",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = true }]
+                }
+            ]
+        };
+        var software = A.Fake<IBrewInstalledSoftware>();
+        A.CallTo(() => software.GetInstalledSoftwareAsync()).Returns(installed);
+        var sut = new BrewExporter(software);
+
+        // Act
+        var model = await sut.CreateExportModelAsync(true);
+
+        // Assert
+        model.Formulae.Should().HaveCount(2);
+        model.Formulae.Select(f => f.Name).Should().BeEquivalentTo("wget", "openssl");
+    }
+
+    [Fact]
+    public async Task CreateExportModelAsync_WhenFormulaHasNoInstalledInfo_IncludedRegardlessOfFlag()
+    {
+        // Arrange
+        var installed = new BrewInstalledModel
+        {
+            Formulae =
+            [
+                new BrewFormulaModel { Name = "wget", Installed = null },
+                new BrewFormulaModel { Name = "curl", Installed = [] }
+            ]
+        };
+        var software = A.Fake<IBrewInstalledSoftware>();
+        A.CallTo(() => software.GetInstalledSoftwareAsync()).Returns(installed);
+        var sut = new BrewExporter(software);
+
+        // Act
+        var model = await sut.CreateExportModelAsync(false);
+
+        // Assert
+        model.Formulae.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task CreateExportModelAsync_WhenFormulaHasMixedInstalledEntries_TreatedAsDependency()
+    {
+        // Arrange – one installed entry is a dependency, the other is not
+        var installed = new BrewInstalledModel
+        {
+            Formulae =
+            [
+                new BrewFormulaModel
+                {
+                    Name = "openssl",
+                    Installed =
+                    [
+                        new BrewInstalledFormulaModel { InstalledAsDependency = false },
+                        new BrewInstalledFormulaModel { InstalledAsDependency = true }
+                    ]
+                }
+            ]
+        };
+        var software = A.Fake<IBrewInstalledSoftware>();
+        A.CallTo(() => software.GetInstalledSoftwareAsync()).Returns(installed);
+        var sut = new BrewExporter(software);
+
+        // Act
+        var model = await sut.CreateExportModelAsync(false);
+
+        // Assert – IsInstalledAsDependency returns true if ANY entry is a dependency
+        model.Formulae.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task CreateExportModelAsync_WhenAllFormulaeAreDependencies_IncludeDependenciesTrue_ReturnsAll()
+    {
+        // Arrange
+        var installed = new BrewInstalledModel
+        {
+            Formulae =
+            [
+                new BrewFormulaModel
+                {
+                    Name = "openssl",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = true }]
+                },
+                new BrewFormulaModel
+                {
+                    Name = "zlib",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = true }]
+                }
+            ]
+        };
+        var software = A.Fake<IBrewInstalledSoftware>();
+        A.CallTo(() => software.GetInstalledSoftwareAsync()).Returns(installed);
+        var sut = new BrewExporter(software);
+
+        // Act
+        var model = await sut.CreateExportModelAsync(true);
+
+        // Assert
+        model.Formulae.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task CreateExportModelAsync_WhenIncludeDependenciesFalse_DoesNotAffectCasks()
+    {
+        // Arrange
+        var installed = new BrewInstalledModel
+        {
+            Formulae =
+            [
+                new BrewFormulaModel
+                {
+                    Name = "openssl",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = true }]
+                }
+            ],
+            Casks = [new BrewCaskModel { Token = "firefox" }]
+        };
+        var software = A.Fake<IBrewInstalledSoftware>();
+        A.CallTo(() => software.GetInstalledSoftwareAsync()).Returns(installed);
+        var sut = new BrewExporter(software);
+
+        // Act
+        var model = await sut.CreateExportModelAsync(false);
+
+        // Assert
+        model.Formulae.Should().BeEmpty();
+        model.Casks.Should().ContainSingle().Which.Token.Should().Be("firefox");
+    }
+
+    [Fact]
+    public async Task ExportToFileAsync_PassesIncludeDependenciesToModel()
+    {
+        // Arrange
+        var installed = new BrewInstalledModel
+        {
+            Formulae =
+            [
+                new BrewFormulaModel
+                {
+                    Name = "wget",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = false }]
+                },
+                new BrewFormulaModel
+                {
+                    Name = "openssl",
+                    Installed = [new BrewInstalledFormulaModel { InstalledAsDependency = true }]
+                }
+            ]
+        };
+        var software = A.Fake<IBrewInstalledSoftware>();
+        A.CallTo(() => software.GetInstalledSoftwareAsync()).Returns(installed);
+        var sut = new BrewExporter(software);
+        var filePath = Path.Combine(Path.GetTempPath(), $"brew-export-{Guid.NewGuid():N}.json");
+
+        try
+        {
+            // Act
+            await sut.ExportToFileAsync(filePath, true);
+
+            // Assert
+            var content = await File.ReadAllTextAsync(filePath);
+            var roundtrip = JsonSerializer.Deserialize<BrewExportModel>(content);
+            roundtrip.Should().NotBeNull();
+            roundtrip!.Formulae.Should().HaveCount(2);
+        }
+        finally
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
     }
 
     [Fact]
@@ -164,7 +384,7 @@ public class BrewExporterTests
         try
         {
             // Act
-            await sut.ExportToFileAsync(filePath);
+            await sut.ExportToFileAsync(filePath, false);
 
             // Assert
             File.Exists(filePath).Should().BeTrue();
@@ -196,7 +416,7 @@ public class BrewExporterTests
         try
         {
             // Act
-            await sut.ExportToFileAsync(filePath);
+            await sut.ExportToFileAsync(filePath, false);
 
             // Assert
             File.Exists(filePath).Should().BeTrue();
@@ -221,7 +441,7 @@ public class BrewExporterTests
         var sut = new BrewExporter(software);
 
         // Act
-        var act = () => sut.ExportToFileAsync(filePath!);
+        var act = () => sut.ExportToFileAsync(filePath!, false);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
