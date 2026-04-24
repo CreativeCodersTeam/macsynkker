@@ -328,3 +328,4 @@ ASALocalRun/
 .nuke
 
 .DS_Store
+.tokensave

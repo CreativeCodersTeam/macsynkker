@@ -11,6 +11,10 @@ namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.List;
 
 [UsedImplicitly]
 [CliCommand([HomebrewCommandGroup.Name, "list"], Description = "Shows Homebrew installed software")]
+
+/// <summary>
+/// Lists the installed Homebrew formulae and casks on the console.
+/// </summary>
 public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewInstalledSoftware brewInstalledSoftware)
     : ICliCommand<BrewListInstalledSoftwareOptions>
 {
@@ -18,6 +22,11 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
 
     private readonly IBrewInstalledSoftware _brewInstalledSoftware = Ensure.NotNull(brewInstalledSoftware);
 
+    /// <summary>
+    /// Retrieves and displays the installed Homebrew software based on the specified <paramref name="options"/>.
+    /// </summary>
+    /// <param name="options">The listing options controlling output format and filters.</param>
+    /// <returns>A <see cref="CommandResult"/> indicating success or failure.</returns>
     public async Task<CommandResult> ExecuteAsync(BrewListInstalledSoftwareOptions options)
     {
         _ansiConsole.WriteLine("List installed HomeBrew software");
@@ -44,6 +53,13 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         return CommandResult.Success;
     }
 
+    /// <summary>
+    /// Prints the installed formulae to the console.
+    /// </summary>
+    /// <param name="installedSoftwareFormulae">The formulae to display.</param>
+    /// <param name="optionsShowAsListView">
+    /// <see langword="true"/> to render a table; otherwise, <see langword="false"/> for a simple list.
+    /// </param>
     private void PrintFormulae(BrewFormulaModel[] installedSoftwareFormulae, bool optionsShowAsListView)
     {
         _ansiConsole.WriteLines("Installed HomeBrew formulae:", string.Empty);
@@ -54,7 +70,10 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
                 new TableColumnDef<BrewFormulaModel>(x => x.FullName, "FullName"),
                 new TableColumnDef<BrewFormulaModel>(x =>
                     string.Join(",", x.Installed?.Select(y => y.Version) ?? []), "Installed"),
-                new TableColumnDef<BrewFormulaModel>(x => x.Versions?.Stable, "Available")
+                new TableColumnDef<BrewFormulaModel>(x => x.Versions?.Stable, "Available"),
+                new TableColumnDef<BrewFormulaModel>(
+                    x => x.IsInstalledAsDependency(),
+                    "Installed as dependency")
             ]);
         }
         else
@@ -67,6 +86,13 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         }
     }
 
+    /// <summary>
+    /// Prints the installed casks to the console.
+    /// </summary>
+    /// <param name="installedSoftwareCasks">The casks to display.</param>
+    /// <param name="optionsShowAsListView">
+    /// <see langword="true"/> to render a table; otherwise, <see langword="false"/> for a simple list.
+    /// </param>
     private void PrintCasks(BrewCaskModel[] installedSoftwareCasks, bool optionsShowAsListView)
     {
         _ansiConsole.WriteLines("Installed HomeBrew casks:", string.Empty);
@@ -92,6 +118,11 @@ public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewIns
         }
     }
 
+    /// <summary>
+    /// Extracts the primary version number from a cask version string that may contain multiple comma-separated parts.
+    /// </summary>
+    /// <param name="versionString">The raw version string from the cask model.</param>
+    /// <returns>The extracted version, or an empty string if <paramref name="versionString"/> is empty.</returns>
     private static string ExtractCaskVersion(string? versionString)
     {
         if (string.IsNullOrWhiteSpace(versionString))
