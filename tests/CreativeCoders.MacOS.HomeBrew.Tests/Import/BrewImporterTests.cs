@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AwesomeAssertions;
+using CreativeCoders.MacOS.HomeBrew;
 using CreativeCoders.MacOS.HomeBrew.Import;
 using CreativeCoders.MacOS.HomeBrew.Models.Export;
 using FakeItEasy;
@@ -130,13 +131,10 @@ public class BrewImporterTests
             Casks = [new BrewExportCaskModel { Token = "firefox" }]
         };
         var reports = new List<BrewImportProgress>();
-        var progress = new Progress<BrewImportProgress>(reports.Add);
+        var progress = new SynchronousProgress<BrewImportProgress>(reports.Add);
 
         // Act
         await sut.ImportAsync(exportModel, progress);
-
-        // Allow the Progress<T> SynchronizationContext to flush callbacks
-        await Task.Delay(50);
 
         // Assert
         reports.Should().Contain(r => r.Step == BrewImportStep.Tap
@@ -162,13 +160,12 @@ public class BrewImporterTests
             Formulae = [new BrewExportFormulaModel { Name = "bad" }]
         };
         var reports = new List<BrewImportProgress>();
-        var progress = new Progress<BrewImportProgress>(reports.Add);
+        var progress = new SynchronousProgress<BrewImportProgress>(reports.Add);
 
         // Act
         var act = () => sut.ImportAsync(exportModel, progress);
 
         await act.Should().ThrowAsync<BrewImportFailedException>();
-        await Task.Delay(50);
 
         // Assert
         reports.Should().Contain(r => r.State == BrewImportStepState.Failed
