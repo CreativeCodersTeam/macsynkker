@@ -1,7 +1,7 @@
 using CreativeCoders.Cli.Core;
 using CreativeCoders.Core;
+using CreativeCoders.MacOS.HomeBrew;
 using CreativeCoders.MacOS.HomeBrew.Import;
-using CreativeCoders.SysConsole.Core;
 using JetBrains.Annotations;
 using Spectre.Console;
 
@@ -29,7 +29,7 @@ public class BrewImportCommand(IAnsiConsole ansiConsole, IBrewImporter brewImpor
         _ansiConsole.MarkupLine($"Importing Homebrew software from '{options.InputPath}'");
         _ansiConsole.WriteLine();
 
-        var progress = new Progress<BrewImportProgress>(OnProgress);
+        var progress = new SynchronousProgress<BrewImportProgress>(OnProgress);
 
         try
         {
