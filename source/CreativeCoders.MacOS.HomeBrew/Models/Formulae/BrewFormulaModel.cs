@@ -97,7 +97,7 @@ public class BrewFormulaModel
 
     /// <summary>Gets or sets compile-time options (rarely used).</summary>
     [JsonPropertyName("options")]
-    public string[]? Options { get; set; }
+    public BrewFormulaOptionModel[]? Options { get; set; }
 
     /// <summary>Gets or sets build-time dependencies.</summary>
     [JsonPropertyName("build_dependencies")]
