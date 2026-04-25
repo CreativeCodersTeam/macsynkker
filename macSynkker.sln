@@ -61,6 +61,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{076341D1-E2B7-
 		.github\workflows\pull-request.yml = .github\workflows\pull-request.yml
 		.github\workflows\integration.yml = .github\workflows\integration.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\sync-ai-config.yml = .github\workflows\sync-ai-config.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "instructions", "instructions", "{3CAC9757-F7D3-4A37-9820-B8755EF7FF3F}"
