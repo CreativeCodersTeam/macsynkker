@@ -39,28 +39,28 @@ the [Releases](https://github.com/CreativeCodersTeam/macsynkker/releases) page a
 
 ## Usage
 
-The CLI is invoked as `mcs`. Run it without arguments to see available commands:
+The CLI is invoked as `macsk`. Run it without arguments to see available commands:
 
 ```bash
-mcs
+macsk
 ```
 
 ### Export Homebrew packages
 
 ```bash
-mcs brew export --file ~/brew-packages.json
+macsk brew export --file ~/brew-packages.json
 ```
 
 ### Import Homebrew packages on another machine
 
 ```bash
-mcs brew import --file ~/brew-packages.json
+macsk brew import --file ~/brew-packages.json
 ```
 
 ### Export macOS user defaults
 
 ```bash
-mcs defaults export --domain com.apple.finder --file ~/finder-defaults.plist
+macsk defaults export --domain com.apple.finder --file ~/finder-defaults.plist
 ```
 
 > [!TIP]
@@ -73,7 +73,7 @@ source/
   CreativeCoders.MacOS.Core/            Core macOS utilities (program locator)
   CreativeCoders.MacOS.HomeBrew/        Homebrew query, install, upgrade, export, import
   CreativeCoders.MacOS.UserDefaults/    macOS user defaults export/import
-  CreativeCoders.MacSynkker.Cli/        CLI entry point (mcs)
+  CreativeCoders.MacSynkker.Cli/        CLI entry point (macsk)
 samples/
   SampleConsoleApp/                     Sample showing library usage
 tests/

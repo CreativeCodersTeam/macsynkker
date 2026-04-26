@@ -4,10 +4,10 @@
         <OutputType>Exe</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>mcs</AssemblyName>
+        <AssemblyName>macsk</AssemblyName>
         <PackAsTool>true</PackAsTool>
         <IsPackable>true</IsPackable>
-        <ToolCommandName>mcs</ToolCommandName>
+        <ToolCommandName>macsk</ToolCommandName>
         <PackageId>CreativeCoders.MacSynkker.Cli</PackageId>
     </PropertyGroup>
 
