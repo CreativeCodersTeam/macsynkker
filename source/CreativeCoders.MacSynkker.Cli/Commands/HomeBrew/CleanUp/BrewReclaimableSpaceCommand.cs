@@ -12,7 +12,7 @@ namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.CleanUp;
 [CliCommand([HomebrewCommandGroup.Name, CleanUpCommandGroup.Name + "-show"],
     Description = "Show disk space brew cleanup would reclaim (dry-run)")]
 public class BrewReclaimableSpaceCommand(IBrewCleanup brewCleanup, IAnsiConsole ansiConsole)
-    : ICliCommand<BrewCleanUpOptions>
+    : ICliCommand<BrewReclaimableSpaceOptions>
 {
     private static readonly string[] UnitSuffixes = ["B", "KB", "MB", "GB", "TB", "PB"];
 
@@ -20,7 +20,7 @@ public class BrewReclaimableSpaceCommand(IBrewCleanup brewCleanup, IAnsiConsole 
 
     private readonly IAnsiConsole _ansiConsole = Ensure.NotNull(ansiConsole);
 
-    public async Task<CommandResult> ExecuteAsync(BrewCleanUpOptions options)
+    public async Task<CommandResult> ExecuteAsync(BrewReclaimableSpaceOptions options)
     {
         Ensure.NotNull(options);
 
@@ -30,10 +30,19 @@ public class BrewReclaimableSpaceCommand(IBrewCleanup brewCleanup, IAnsiConsole 
 
         try
         {
-            var bytes = await _brewCleanup.GetReclaimableSpaceAsync(brewOptions).ConfigureAwait(false);
+            if (options.Details)
+            {
+                var details = await _brewCleanup.GetReclaimableSpaceDetailsAsync(brewOptions)
+                    .ConfigureAwait(false);
 
-            _ansiConsole.MarkupLine(
-                $"Reclaimable space: [green]{FormatBytes(bytes)}[/] ({bytes:N0} bytes)");
+                WriteDetails(details);
+            }
+            else
+            {
+                var bytes = await _brewCleanup.GetReclaimableSpaceAsync(brewOptions).ConfigureAwait(false);
+
+                WriteTotal(bytes);
+            }
         }
         catch (BrewCleanupFailedException e)
         {
@@ -42,6 +51,39 @@ public class BrewReclaimableSpaceCommand(IBrewCleanup brewCleanup, IAnsiConsole 
         }
 
         return CommandResult.Success;
+    }
+
+    private void WriteTotal(long bytes)
+    {
+        _ansiConsole.MarkupLine(
+            $"Reclaimable space: [green]{FormatBytes(bytes)}[/] ({bytes:N0} bytes)");
+    }
+
+    private void WriteDetails(ReclaimableSpace details)
+    {
+        if (details.Items.Count == 0)
+        {
+            _ansiConsole.MarkupLine("[yellow]No reclaimable entries found.[/]");
+        }
+        else
+        {
+            var table = new Table()
+                .AddColumn("Path")
+                .AddColumn(new TableColumn("Size").RightAligned())
+                .AddColumn(new TableColumn("Bytes").RightAligned());
+
+            foreach (var item in details.Items)
+            {
+                table.AddRow(
+                    Markup.Escape(item.Path),
+                    FormatBytes(item.SizeInBytes),
+                    item.SizeInBytes.ToString("N0", CultureInfo.InvariantCulture));
+            }
+
+            _ansiConsole.Write(table);
+        }
+
+        WriteTotal(details.TotalBytes);
     }
 
     private static string FormatBytes(long bytes)

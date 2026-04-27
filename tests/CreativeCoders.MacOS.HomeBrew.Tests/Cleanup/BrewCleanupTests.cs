@@ -93,6 +93,60 @@ public class BrewCleanupTests
     }
 
     [Fact]
+    public async Task GetReclaimableSpaceDetailsAsync_SetsDryRunAndParsesItemsAndTotal()
+    {
+        var builder = FakeProcessExecutorBuilder.Create<string>(out var executor);
+        A.CallTo(() => executor.ExecuteAsync(A<IDictionary<string, object?>>._))
+            .Returns(Task.FromResult<string?>("""
+                                              Removing: /tmp/a (1MB)
+                                              Removing: /tmp/b (2MB)
+                                              This operation would free approximately 3MB of disk space.
+                                              """));
+        var sut = new BrewCleanup(builder);
+
+        var result = await sut.GetReclaimableSpaceDetailsAsync(
+            new BrewCleanupOptions { Prune = BrewPruneOption.Days(7) });
+
+        result.TotalBytes.Should().Be(3L * 1024 * 1024);
+        result.Items.Should().HaveCount(2);
+        result.Items[0].Path.Should().Be("/tmp/a");
+        result.Items[0].SizeInBytes.Should().Be(1L * 1024 * 1024);
+        result.Items[1].Path.Should().Be("/tmp/b");
+        result.Items[1].SizeInBytes.Should().Be(2L * 1024 * 1024);
+        A.CallTo(() => executor.ExecuteAsync(A<IDictionary<string, object?>>.That
+                .Matches(d => (string?)d["prune"] == "--prune=7" && (string?)d["dryRun"] == "--dry-run")))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Fact]
+    public async Task GetReclaimableSpaceDetailsAsync_WithoutSizeInOutput_ReturnsEmptyResult()
+    {
+        var builder = FakeProcessExecutorBuilder.Create<string>(out var executor);
+        A.CallTo(() => executor.ExecuteAsync(A<IDictionary<string, object?>>._))
+            .Returns(Task.FromResult<string?>("Nothing to clean."));
+        var sut = new BrewCleanup(builder);
+
+        var result = await sut.GetReclaimableSpaceDetailsAsync();
+
+        result.TotalBytes.Should().Be(0);
+        result.Items.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetReclaimableSpaceDetailsAsync_WhenExecutionFails_ThrowsBrewCleanupFailedException()
+    {
+        var builder = FakeProcessExecutorBuilder.Create<string>(out var executor);
+        A.CallTo(() => executor.ExecuteAsync(A<IDictionary<string, object?>>._))
+            .Throws(new ProcessExecutionFailedException(2, "fail", "out"));
+        var sut = new BrewCleanup(builder);
+
+        var act = () => sut.GetReclaimableSpaceDetailsAsync();
+
+        var ex = await act.Should().ThrowAsync<BrewCleanupFailedException>();
+        ex.Which.ExitCode.Should().Be(2);
+    }
+
+    [Fact]
     public void Ctor_WhenBuilderIsNull_Throws()
     {
         var act = () => new BrewCleanup(null!);
