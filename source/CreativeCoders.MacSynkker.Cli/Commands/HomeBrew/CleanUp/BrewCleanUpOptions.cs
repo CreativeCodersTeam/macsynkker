@@ -45,12 +45,8 @@ public class BrewCleanUpOptions : IOptionsValidation
                 OptionsValidationResult.Invalid(["--prune and --prune-all are mutually exclusive"]));
         }
 
-        if (PruneDays is < 0)
-        {
-            return Task.FromResult(
-                OptionsValidationResult.Invalid(["--prune must be zero or a positive number of days"]));
-        }
-
-        return Task.FromResult(OptionsValidationResult.Valid());
+        return Task.FromResult(PruneDays is < 0
+            ? OptionsValidationResult.Invalid(["--prune must be zero or a positive number of days"])
+            : OptionsValidationResult.Valid());
     }
 }
