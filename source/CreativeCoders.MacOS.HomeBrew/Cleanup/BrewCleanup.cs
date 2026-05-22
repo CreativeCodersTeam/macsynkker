@@ -23,11 +23,13 @@ public class BrewCleanup : IBrewCleanup
             .Build();
     }
 
+    /// <inheritdoc />
     public async Task CleanupAsync(BrewCleanupOptions? options = null)
     {
         await ExecuteAsync(options, dryRun: false).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<long> GetReclaimableSpaceAsync(BrewCleanupOptions? options = null)
     {
         var details = await GetReclaimableSpaceDetailsAsync(options).ConfigureAwait(false);
@@ -35,6 +37,7 @@ public class BrewCleanup : IBrewCleanup
         return details.TotalBytes;
     }
 
+    /// <inheritdoc />
     public async Task<ReclaimableSpace> GetReclaimableSpaceDetailsAsync(BrewCleanupOptions? options = null)
     {
         var output = await ExecuteAsync(options, dryRun: true).ConfigureAwait(false);
