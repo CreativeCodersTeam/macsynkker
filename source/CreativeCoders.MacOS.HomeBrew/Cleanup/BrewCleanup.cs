@@ -54,7 +54,7 @@ public class BrewCleanup : IBrewCleanup
         }
         catch (ProcessExecutionFailedException e)
         {
-            throw new BrewCleanupFailedException("Brew cleanup failed", e.ErrorOutput, e.ExitCode);
+            throw new BrewCleanupFailedException("Brew cleanup failed", e.ErrorOutput, e.ExitCode, e);
         }
     }
 }

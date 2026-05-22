@@ -35,6 +35,8 @@ public class BrewCleanUpCommand(IBrewCleanup brewCleanup, IAnsiConsole ansiConso
         {
             _ansiConsole.MarkupLine("[red]Cleanup failed[/]");
             _ansiConsole.WriteLine(e.ErrorOutput);
+
+            return new CommandResult(MacSynkkerCliExitCodes.CleanupFailed);
         }
 
         return CommandResult.Success;

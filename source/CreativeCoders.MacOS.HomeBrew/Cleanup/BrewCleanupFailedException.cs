@@ -4,7 +4,11 @@ namespace CreativeCoders.MacOS.HomeBrew.Cleanup;
 /// Thrown when <c>brew cleanup</c> exits with a non-zero exit code. Carries the captured error
 /// output and the exit code for diagnostics.
 /// </summary>
-public class BrewCleanupFailedException(string message, string errorOutput, int exitCode) : Exception(message)
+public class BrewCleanupFailedException(
+    string message,
+    string errorOutput,
+    int exitCode,
+    Exception? innerException = null) : Exception(message, innerException)
 {
     /// <summary>Gets the standard error output captured from the <c>brew</c> process.</summary>
     public string ErrorOutput { get; } = errorOutput;
