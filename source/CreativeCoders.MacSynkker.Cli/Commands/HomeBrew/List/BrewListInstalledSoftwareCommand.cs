@@ -9,12 +9,11 @@ using Spectre.Console;
 
 namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.List;
 
-[UsedImplicitly]
-[CliCommand([HomebrewCommandGroup.Name, "list"], Description = "Shows Homebrew installed software")]
-
 /// <summary>
 /// Lists the installed Homebrew formulae and casks on the console.
 /// </summary>
+[UsedImplicitly]
+[CliCommand([HomebrewCommandGroup.Name, "list"], Description = "Shows Homebrew installed software")]
 public class BrewListInstalledSoftwareCommand(IAnsiConsole ansiConsole, IBrewInstalledSoftware brewInstalledSoftware)
     : ICliCommand<BrewListInstalledSoftwareOptions>
 {

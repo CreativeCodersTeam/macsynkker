@@ -1,3 +1,4 @@
+using CreativeCoders.MacOS.HomeBrew.Cleanup;
 using CreativeCoders.MacOS.HomeBrew.Export;
 using CreativeCoders.MacOS.HomeBrew.Import;
 using CreativeCoders.ProcessUtils;
@@ -18,6 +19,7 @@ public static class HomeBrewServiceCollectionExtensions
         services.TryAddSingleton<IBrewExporter, BrewExporter>();
         services.TryAddSingleton<IBrewInstaller, BrewInstaller>();
         services.TryAddSingleton<IBrewImporter, BrewImporter>();
+        services.TryAddSingleton<IBrewCleanup, BrewCleanup>();
 
         return services;
     }

@@ -10,6 +10,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="CreativeCoders.MacOS.HomeBrew.Tests"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="CreativeCoders.DependencyInjection" Version="6.6.0"/>
         <PackageReference Include="CreativeCoders.ProcessUtils" Version="6.6.0"/>
     </ItemGroup>
