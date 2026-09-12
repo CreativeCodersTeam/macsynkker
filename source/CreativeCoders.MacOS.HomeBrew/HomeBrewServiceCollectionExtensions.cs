@@ -16,6 +16,7 @@ public static class HomeBrewServiceCollectionExtensions
         services.TryAddSingleton<IBrewInfo, BrewInfo>();
         services.TryAddSingleton<IBrewInstalledSoftware, BrewInstalledSoftware>();
         services.TryAddSingleton<IBrewUpgrader, BrewUpgrader>();
+        services.TryAddSingleton<IBrewUpdater, BrewUpdater>();
         services.TryAddSingleton<IBrewExporter, BrewExporter>();
         services.TryAddSingleton<IBrewInstaller, BrewInstaller>();
         services.TryAddSingleton<IBrewImporter, BrewImporter>();
