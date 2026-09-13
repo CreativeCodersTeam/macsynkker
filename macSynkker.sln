@@ -52,7 +52,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{076341D1-E2B7-
 		.github\workflows\pull-request.yml = .github\workflows\pull-request.yml
 		.github\workflows\integration.yml = .github\workflows\integration.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
-		.github\workflows\sync-ai-config.yml = .github\workflows\sync-ai-config.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1A70000D-DAC9-4D34-9306-7914CC837B05}"
