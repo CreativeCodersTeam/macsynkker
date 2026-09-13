@@ -10,6 +10,7 @@ namespace CreativeCoders.MacSynkker.Cli.Commands.HomeBrew.Upgrade;
 [UsedImplicitly]
 [CliCommand([HomebrewCommandGroup.Name, "upgrade"], Description = "Upgrade Homebrew installed software")]
 public class BrewUpgradeCommand(
+    IBrewUpdater brewUpdater,
     IBrewUpgrader brewUpgrader,
     IBrewInstalledSoftware brewInstalledSoftware,
     IAnsiConsole ansiConsole)
@@ -19,11 +20,17 @@ public class BrewUpgradeCommand(
 
     private readonly IBrewInstalledSoftware _brewInstalledSoftware = Ensure.NotNull(brewInstalledSoftware);
 
+    private readonly IBrewUpdater _brewUpdater = Ensure.NotNull(brewUpdater);
+
     private readonly IBrewUpgrader _brewUpgrader = Ensure.NotNull(brewUpgrader);
 
     public async Task<CommandResult> ExecuteAsync(BrewUpgradeOptions options)
     {
-        await _brewUpgrader.UpgradeAsync().ConfigureAwait(false);
+        _ansiConsole.Write("Updating Homebrew ... ");
+
+        await _brewUpdater.UpdateAsync().ConfigureAwait(false);
+
+        _ansiConsole.MarkupLine("[green]Done[/]");
 
         if (!string.IsNullOrWhiteSpace(options.AppName))
         {
@@ -55,7 +62,16 @@ public class BrewUpgradeCommand(
     {
         var installedSoftware = await _brewInstalledSoftware.GetInstalledSoftwareAsync().ConfigureAwait(false);
 
-        var outdatedCaskNames = installedSoftware.GetOutdatedCasks()
+        var outdatedCasks = installedSoftware.GetOutdatedCasks().ToArray();
+        var outdatedFormulae = installedSoftware.GetOutdatedFormulae().ToArray();
+
+        if (!outdatedCasks.Any() && !outdatedFormulae.Any())
+        {
+            _ansiConsole.MarkupLine("No outdated software found".ToInfoMarkup());
+            return;
+        }
+
+        var outdatedCaskNames = outdatedCasks
             .Select(x => x.FullToken)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .OfType<string>();
@@ -70,7 +86,7 @@ public class BrewUpgradeCommand(
             }
         }
 
-        var outdatedFormulaeNames = installedSoftware.GetOutdatedFormulae()
+        var outdatedFormulaeNames = outdatedFormulae
             .Select(x => x.FullName)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .OfType<string>();

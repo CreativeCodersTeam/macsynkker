@@ -8,15 +8,16 @@ public class BrewUpgrader(
 {
     private readonly IProcessExecutor<string> _upgradeBrewExecutor = Ensure.NotNull(processExecutorBuilder)
         .SetFileName("brew")
-        .SetArguments(["upgrade", "{{appName}}", "{{force}}"])
+        .SetArguments(["upgrade", "{{appName}}", "{{force}}", "{{askForConfirmation}}"])
         .ShouldThrowOnError()
         .Build();
 
-    public async Task UpgradeAsync(bool force = false)
+    public async Task UpgradeAsync(bool force = false, bool askForConfirmation = false)
     {
         try
         {
-            await _upgradeBrewExecutor.ExecuteAsync(new { appName = "", force = force ? "-f" : "" })
+            await _upgradeBrewExecutor.ExecuteAsync(new
+                    { appName = "", force = force ? "-f" : "", askForConfirmation = !askForConfirmation ? "-y" : "" })
                 .ConfigureAwait(false);
         }
         catch (ProcessExecutionFailedException e)
@@ -25,11 +26,13 @@ public class BrewUpgrader(
         }
     }
 
-    public async Task UpgradeSoftwareAsync(string appName, bool force = false)
+    public async Task UpgradeSoftwareAsync(string appName, bool force = false, bool askForConfirmation = false)
     {
         try
         {
-            await _upgradeBrewExecutor.ExecuteAsync(new { appName, force = force ? "-f" : "" }).ConfigureAwait(false);
+            await _upgradeBrewExecutor.ExecuteAsync(new
+                    { appName, force = force ? "-f" : "", askForConfirmation = !askForConfirmation ? "-y" : "" })
+                .ConfigureAwait(false);
         }
         catch (ProcessExecutionFailedException e)
         {
