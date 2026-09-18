@@ -1,4 +1,5 @@
 using AwesomeAssertions;
+using CreativeCoders.MacOS.HomeBrew.Cleanup;
 using CreativeCoders.MacOS.HomeBrew.Import;
 
 namespace CreativeCoders.MacOS.HomeBrew.Tests;
@@ -29,6 +30,44 @@ public class ExceptionTests
         ex.ErrorOutput.Should().Be("err");
         ex.ExitCode.Should().Be(1);
         ex.Should().BeAssignableTo<BrewUpgradeException>();
+    }
+
+    [Fact]
+    public void BrewUpdateException_StoresMessageErrorOutputAndExitCode()
+    {
+        // Arrange + Act
+        var ex = new BrewUpdateException("msg", "err", 42);
+
+        // Assert
+        ex.Message.Should().Be("msg");
+        ex.ErrorOutput.Should().Be("err");
+        ex.ExitCode.Should().Be(42);
+    }
+
+    [Fact]
+    public void BrewCleanupFailedException_StoresMessageErrorOutputAndExitCode()
+    {
+        // Arrange + Act
+        var ex = new BrewCleanupFailedException("msg", "err", 8);
+
+        // Assert
+        ex.Message.Should().Be("msg");
+        ex.ErrorOutput.Should().Be("err");
+        ex.ExitCode.Should().Be(8);
+        ex.InnerException.Should().BeNull();
+    }
+
+    [Fact]
+    public void BrewCleanupFailedException_WhenInnerExceptionGiven_KeepsIt()
+    {
+        // Arrange
+        var inner = new InvalidOperationException("inner");
+
+        // Act
+        var ex = new BrewCleanupFailedException("msg", "err", 8, inner);
+
+        // Assert
+        ex.InnerException.Should().BeSameAs(inner);
     }
 
     [Theory]
