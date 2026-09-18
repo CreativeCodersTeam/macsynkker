@@ -100,6 +100,10 @@ public class BrewUpgradeCommand(
                 return;
             }
         }
+
+        _ansiConsole.MarkupLine("Upgrade missing dependencies ... ".ToInfoMarkup());
+        await _brewUpgrader.UpgradeAsync().ConfigureAwait(false);
+        _ansiConsole.MarkupLine("[green]Done[/]");
     }
 
     private async Task<bool> UpgradeSoftwareAsync(string appName, bool cask)
