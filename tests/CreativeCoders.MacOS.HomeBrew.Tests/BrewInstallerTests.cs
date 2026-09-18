@@ -93,6 +93,8 @@ public class BrewInstallerTests
         var ex = await act.Should().ThrowAsync<BrewInstallFailedException>();
         ex.Which.Kind.Should().Be(BrewInstallTargetKind.Formula);
         ex.Which.Target.Should().Be("wget");
+        ex.Which.ErrorOutput.Should().Be("boom");
+        ex.Which.ExitCode.Should().Be(1);
     }
 
     [Fact]
@@ -127,6 +129,7 @@ public class BrewInstallerTests
         var ex = await act.Should().ThrowAsync<BrewInstallFailedException>();
         ex.Which.Kind.Should().Be(BrewInstallTargetKind.Cask);
         ex.Which.Target.Should().Be("firefox");
+        ex.Which.ErrorOutput.Should().Be("err");
         ex.Which.ExitCode.Should().Be(3);
     }
 

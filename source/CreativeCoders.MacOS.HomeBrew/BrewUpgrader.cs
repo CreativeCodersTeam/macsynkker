@@ -28,6 +28,8 @@ public class BrewUpgrader(
 
     public async Task UpgradeSoftwareAsync(string appName, bool force = false, bool askForConfirmation = false)
     {
+        Ensure.IsNotNullOrWhitespace(appName);
+
         try
         {
             await _upgradeBrewExecutor.ExecuteAsync(new

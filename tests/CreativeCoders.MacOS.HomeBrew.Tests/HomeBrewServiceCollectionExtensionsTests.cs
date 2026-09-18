@@ -1,4 +1,5 @@
 using AwesomeAssertions;
+using CreativeCoders.MacOS.HomeBrew.Cleanup;
 using CreativeCoders.MacOS.HomeBrew.Export;
 using CreativeCoders.MacOS.HomeBrew.Import;
 using FakeItEasy;
@@ -30,6 +31,10 @@ public class HomeBrewServiceCollectionExtensionsTests
             && x.ImplementationType == typeof(BrewInstaller));
         services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewImporter)
             && x.ImplementationType == typeof(BrewImporter));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewUpdater)
+            && x.ImplementationType == typeof(BrewUpdater));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewCleanup)
+            && x.ImplementationType == typeof(BrewCleanup));
     }
 
     [Fact]
@@ -60,6 +65,33 @@ public class HomeBrewServiceCollectionExtensionsTests
         provider.GetRequiredService<IBrewExporter>().Should().BeOfType<BrewExporter>();
         provider.GetRequiredService<IBrewInstaller>().Should().BeOfType<BrewInstaller>();
         provider.GetRequiredService<IBrewImporter>().Should().BeOfType<BrewImporter>();
+        provider.GetRequiredService<IBrewUpdater>().Should().BeOfType<BrewUpdater>();
+        provider.GetRequiredService<IBrewCleanup>().Should().BeOfType<BrewCleanup>();
+    }
+
+    /// <summary>
+    /// Verifies that the registration is idempotent, so calling it from several composition roots
+    /// does not produce duplicate service descriptors.
+    /// </summary>
+    [Fact]
+    public void AddHomeBrew_WhenCalledTwice_RegistersEachServiceOnlyOnce()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        // Act
+        services.AddHomeBrew();
+        services.AddHomeBrew();
+
+        // Assert
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewInfo));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewInstalledSoftware));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewUpgrader));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewUpdater));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewExporter));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewInstaller));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewImporter));
+        services.Should().ContainSingle(x => x.ServiceType == typeof(IBrewCleanup));
     }
 
     [Fact]
