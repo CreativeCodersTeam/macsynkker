@@ -65,7 +65,7 @@ public class BrewFormulaModel
 
     /// <summary>Gets or sets the compatibility version, if provided.</summary>
     [JsonPropertyName("compatibility_version")]
-    public string? CompatibilityVersion { get; set; }
+    public int? CompatibilityVersion { get; set; }
 
     /// <summary>Gets or sets whether autobump is enabled for the formula.</summary>
     [JsonPropertyName("autobump")]
